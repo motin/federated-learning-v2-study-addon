@@ -25,6 +25,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Engineering notes specific to this study
+
+### Note to engineers for a potential v3 of this add-on:
+
+* The new model url endpoints that should be used may be may not be live in production. To test the rest of the add-on functionality, you can set `extensions.federated-learning-v2_shield_mozilla_org.test.modelUrlEndpoint` to `https://public-data.telemetry.mozilla.org/awesomebar_study/latest.json` or some local endpoint.
+
 ## Preparations
 
 * Download Developer and Nightly versions of Firefox (only Developer/Nightly will allow bundled web extension experiments, and Developer is the default target for the automated tests)

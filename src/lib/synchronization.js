@@ -2,9 +2,9 @@
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "(ModelSynchronization)" }]*/
 
 const URL_ENDPOINT_HUMAN_SEED =
-  "https://public-data.telemetry.mozilla.org/awesomebar_study_v2/human_seed/latest.json";
+  "https://public-data.telemetry.mozilla.org/awesomebar_study_feb19/human_seed/latest.json";
 const URL_ENDPOINT_CRAZY_SEED =
-  "https://public-data.telemetry.mozilla.org/awesomebar_study_v2/crazy_seed/latest.json";
+  "https://public-data.telemetry.mozilla.org/awesomebar_study_feb19/crazy_seed/latest.json";
 const MINUTES_PER_ITERATION = 5; // Should be a dividor of 60
 
 class ModelSynchronization {
