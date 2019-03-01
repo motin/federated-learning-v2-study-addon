@@ -64,8 +64,6 @@
   },
   "permissions": [
     "telemetry",
-    "webRequest",
-    "<all_urls>",
     "management",
     "storage",
     "alarms"
