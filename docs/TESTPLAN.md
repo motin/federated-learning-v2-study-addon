@@ -43,6 +43,13 @@ The awesome bar is observed and an updated model is calculated and submitted via
 
 Depending on the study branch (see configuration in [../src/feature.js]()), a remote model may be fetched and applied locally (`validation: true`).
 
+### Surveys
+
+This study fires a survey at the following endings:
+
+* `individual-opt-out`
+* `expired`
+
 ### Do these tests (in addition to ordinary regression tests)
 
 **Fetching of the latest upstream model at study start**

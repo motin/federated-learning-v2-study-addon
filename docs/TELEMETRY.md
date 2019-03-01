@@ -35,7 +35,7 @@ This information is used to evaluate the quality of the model.
 
 ## Study-specific endings
 
-This study has no surveys and as such has NO SPECIFIC ENDINGS.
+This study has no study-specific endings.
 
 ## `shield-study` pings (common to all shield-studies)
 
