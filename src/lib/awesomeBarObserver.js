@@ -392,6 +392,13 @@ class AwesomeBarObserver {
    */
   static selectedUrlWasSameAsSearchString(searchString, selectedSuggestionUrl) {
     const normalize = str => {
+      if (str.indexOf("moz-action:visiturl") === 0) {
+        const visitUrlMetadataJson = str.substr(
+          "moz-action:visiturl".length + 1,
+        );
+        const visitUrlMetadata = JSON.parse(visitUrlMetadataJson);
+        str = decodeURIComponent(visitUrlMetadata.url);
+      }
       const withoutInitialProtocol = str.replace(/(^\w+:|^)\/\//, "");
       const withoutEndingSlash = withoutInitialProtocol.replace(/\/$/, "");
       const lowerCase = withoutEndingSlash.toLowerCase();

@@ -23,6 +23,16 @@ describe("awesomeBarObserver.js", function() {
       );
       assert.equal(selectedUrlWasSameAsSearchString, 0);
     });
+    it("test 3", function() {
+      const searchString = "example.com";
+      const selectedSuggestionUrl =
+        'moz-action:visiturl,{"url":"http%3A%2F%2Fexample.com%2F","input":"example.com"}';
+      const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
+        searchString,
+        selectedSuggestionUrl,
+      );
+      assert.equal(selectedUrlWasSameAsSearchString, 1);
+    });
   });
   describe("AwesomeBarObserver.numKeyDownEvents(observedEventsSinceLastFocus)", function() {
     it("test 1", function() {
