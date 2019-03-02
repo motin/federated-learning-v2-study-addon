@@ -11,6 +11,9 @@
           "rankSelected": {
             "type": "number"
           },
+          "searchString": {
+            "type": "string"
+          },
           "searchStringLength": {
             "type": "number"
           },
@@ -25,20 +28,18 @@
           }
         },
         "required": [
-          "numSuggestionsDisplayed",
           "rankSelected",
-          "bookmarkAndHistoryUrlSuggestions",
-          "bookmarkAndHistoryRankSelected",
+          "searchString",
           "searchStringLength",
-          "selectedStyle"
+          "numSuggestionsDisplayed",
+          "suggestions"
         ],
         "testcase": {
-          "bookmarkAndHistoryRankSelected": -1,
-          "bookmarkAndHistoryUrlSuggestions": [],
+          "rankSelected": 2,
+          "searchString": "foo",
           "searchStringLength": 3,
           "numSuggestionsDisplayed": 11,
-          "rankSelected": 2,
-          "selectedStyle": "action searchengine suggestion"
+          "suggestions": []
         }
       },
       {

@@ -4,6 +4,26 @@
 "use strict";
 
 describe("awesomeBarObserver.js", function() {
+  describe("AwesomeBarObserver.selectedUrlWasSameAsSearchString(observedEventsSinceLastFocus)", function() {
+    it("test 1", function() {
+      const searchString = "example.com";
+      const selectedSuggestionUrl = "http://example.com/";
+      const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
+        searchString,
+        selectedSuggestionUrl,
+      );
+      assert.equal(selectedUrlWasSameAsSearchString, 1);
+    });
+    it("test 2", function() {
+      const searchString = "example.com";
+      const selectedSuggestionUrl = "http://example.org/";
+      const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
+        searchString,
+        selectedSuggestionUrl,
+      );
+      assert.equal(selectedUrlWasSameAsSearchString, 0);
+    });
+  });
   describe("AwesomeBarObserver.numKeyDownEvents(observedEventsSinceLastFocus)", function() {
     it("test 1", function() {
       const observedEventsSinceLastFocus = [];

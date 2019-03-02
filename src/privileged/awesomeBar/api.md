@@ -121,6 +121,9 @@ Fires after one or a combination of keys has been pressed and lead to an input i
     "rankSelected": {
       "type": "number"
     },
+    "searchString": {
+      "type": "string"
+    },
     "searchStringLength": {
       "type": "number"
     },
@@ -135,20 +138,18 @@ Fires after one or a combination of keys has been pressed and lead to an input i
     }
   },
   "required": [
-    "numSuggestionsDisplayed",
     "rankSelected",
-    "bookmarkAndHistoryUrlSuggestions",
-    "bookmarkAndHistoryRankSelected",
+    "searchString",
     "searchStringLength",
-    "selectedStyle"
+    "numSuggestionsDisplayed",
+    "suggestions"
   ],
   "testcase": {
-    "bookmarkAndHistoryRankSelected": -1,
-    "bookmarkAndHistoryUrlSuggestions": [],
+    "rankSelected": 2,
+    "searchString": "foo",
     "searchStringLength": 3,
     "numSuggestionsDisplayed": 11,
-    "rankSelected": 2,
-    "selectedStyle": "action searchengine suggestion"
+    "suggestions": []
   }
 }
 ```

@@ -45,7 +45,8 @@ this.awesomeBar = class extends ExtensionAPI {
         );
 
         const rankSelected = popup.selectedIndex;
-        const searchStringLength = controller.searchString.length;
+        const searchString = controller.searchString;
+        const searchStringLength = searchString.length;
         const numSuggestionsDisplayed = controller.matchCount;
 
         const suggestions = [];
@@ -58,6 +59,7 @@ this.awesomeBar = class extends ExtensionAPI {
 
         return {
           rankSelected,
+          searchString,
           searchStringLength,
           numSuggestionsDisplayed,
           suggestions,

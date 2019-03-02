@@ -64,7 +64,7 @@
     "selected_style": {
       "type": "string"
     },
-    "selected_url_was_same_as_entered_search_string": {
+    "selected_url_was_same_as_search_string": {
       "type": "number",
       "minimum": -1
     },
@@ -95,7 +95,7 @@
     "time_at_selecteds_first_entry",
     "search_string_length",
     "selected_style",
-    "selected_url_was_same_as_entered_search_string",
+    "selected_url_was_same_as_search_string",
     "enter_was_pressed",
     "study_variation",
     "study_addon_version"

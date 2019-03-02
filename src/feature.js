@@ -130,7 +130,7 @@ class Feature {
         selected_style: {
           type: "string",
         },
-        selected_url_was_same_as_entered_search_string: {
+        selected_url_was_same_as_search_string: {
           type: "number",
           minimum: -1,
         },
@@ -161,7 +161,7 @@ class Feature {
         "time_at_selecteds_first_entry",
         "search_string_length",
         "selected_style",
-        "selected_url_was_same_as_entered_search_string",
+        "selected_url_was_same_as_search_string",
         "enter_was_pressed",
         "study_variation",
         "study_addon_version",
@@ -213,8 +213,8 @@ class Feature {
       ),
       search_string_length: String(payload.search_string_length),
       selected_style: String(payload.selected_style),
-      selected_url_was_same_as_entered_search_string: String(
-        payload.selected_url_was_same_as_entered_search_string,
+      selected_url_was_same_as_search_string: String(
+        payload.selected_url_was_same_as_search_string,
       ),
       enter_was_pressed: String(payload.enter_was_pressed),
       study_variation: String(payload.study_variation),

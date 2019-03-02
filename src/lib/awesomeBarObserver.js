@@ -107,6 +107,7 @@ class AwesomeBarObserver {
       if (selectionEvent) {
         const {
           rankSelected,
+          searchString,
           searchStringLength,
           numSuggestionsDisplayed,
           suggestions,
@@ -117,6 +118,11 @@ class AwesomeBarObserver {
         );
 
         const selectedSuggestion = suggestions[rankSelected];
+
+        const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
+          searchString,
+          selectedSuggestion.url,
+        );
 
         const bookmarkAndHistorySuggestions = suggestions.filter(suggestion =>
           AwesomeBarObserver.isBookmarkOrHistoryStyle(suggestion.style),
@@ -142,8 +148,6 @@ class AwesomeBarObserver {
           eventAtSelectedsFirstEntry.timestamp.getTime() -
           focusEvent.timestamp.getTime();
 
-        const selectedUrlWasSameAsEnteredSearchString = -1;
-
         await this.frecencyOptimizer.step(
           numSuggestionsDisplayed,
           rankSelected,
@@ -156,7 +160,7 @@ class AwesomeBarObserver {
           timeAtSelectedsFirstEntry,
           searchStringLength,
           selectedStyle,
-          selectedUrlWasSameAsEnteredSearchString,
+          selectedUrlWasSameAsSearchString,
           enterWasPressed,
         );
       } else {
@@ -195,7 +199,7 @@ class AwesomeBarObserver {
           const bookmarkAndHistoryRankSelected = -1;
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
-          const selectedUrlWasSameAsEnteredSearchString = -1;
+          const selectedUrlWasSameAsSearchString = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -209,7 +213,7 @@ class AwesomeBarObserver {
             timeAtSelectedsFirstEntry,
             searchStringLength,
             selectedStyle,
-            selectedUrlWasSameAsEnteredSearchString,
+            selectedUrlWasSameAsSearchString,
             enterWasPressed,
           );
         } else {
@@ -229,7 +233,7 @@ class AwesomeBarObserver {
           const bookmarkAndHistoryRankSelected = -1;
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
-          const selectedUrlWasSameAsEnteredSearchString = -1;
+          const selectedUrlWasSameAsSearchString = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -243,7 +247,7 @@ class AwesomeBarObserver {
             timeAtSelectedsFirstEntry,
             searchStringLength,
             selectedStyle,
-            selectedUrlWasSameAsEnteredSearchString,
+            selectedUrlWasSameAsSearchString,
             enterWasPressed,
           );
         }
@@ -379,6 +383,21 @@ class AwesomeBarObserver {
       styles.has(s),
     );
     return !isNonBookmarkOrHistoryStyle;
+  }
+
+  /**
+   * @param {string} searchString Self-explanatory hopefully
+   * @param {object} selectedSuggestionUrl Self-explanatory hopefully
+   * @returns {int} the amount of key down events since last focus, excluding "Enter" key down events
+   */
+  static selectedUrlWasSameAsSearchString(searchString, selectedSuggestionUrl) {
+    const normalize = str => {
+      const withoutInitialProtocol = str.replace(/(^\w+:|^)\/\//, "");
+      const withoutEndingSlash = withoutInitialProtocol.replace(/\/$/, "");
+      const lowerCase = withoutEndingSlash.toLowerCase();
+      return lowerCase;
+    };
+    return normalize(searchString) === normalize(selectedSuggestionUrl) ? 1 : 0;
   }
 
   /**

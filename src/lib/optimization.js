@@ -41,7 +41,7 @@ class FrecencyOptimizer {
     timeAtSelectedsFirstEntry,
     searchStringLength,
     selectedStyle,
-    selectedUrlWasSameAsEnteredSearchString,
+    selectedUrlWasSameAsSearchString,
     enterWasPressed,
   ) {
     await browser.study.logger.debug([
@@ -84,7 +84,7 @@ class FrecencyOptimizer {
         timeAtSelectedsFirstEntry,
         searchStringLength,
         selectedStyle,
-        selectedUrlWasSameAsEnteredSearchString,
+        selectedUrlWasSameAsSearchString,
         enterWasPressed,
       });
     } catch (error) {
