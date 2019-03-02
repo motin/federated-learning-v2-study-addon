@@ -64,6 +64,14 @@
     "selected_style": {
       "type": "string"
     },
+    "selected_url_was_same_as_entered_search_string": {
+      "type": "number",
+      "minimum": -1
+    },
+    "selected_using_enter_key": {
+      "type": "number",
+      "minimum": -1
+    },
     "study_variation": {
       "type": "string"
     },
@@ -87,6 +95,8 @@
     "time_at_selecteds_first_entry",
     "search_string_length",
     "selected_style",
+    "selected_url_was_same_as_entered_search_string",
+    "selected_using_enter_key",
     "study_variation",
     "study_addon_version"
   ]

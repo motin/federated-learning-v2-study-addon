@@ -131,6 +131,9 @@ class AwesomeBarObserver {
           eventAtSelectedsFirstEntry.timestamp.getTime() -
           focusEvent.timestamp.getTime();
 
+        const selectedUrlWasSameAsEnteredSearchString = -1;
+        const selectedUsingEnterKey = -1;
+
         await this.frecencyOptimizer.step(
           numSuggestionsDisplayed,
           rankSelected,
@@ -143,6 +146,8 @@ class AwesomeBarObserver {
           timeAtSelectedsFirstEntry,
           searchStringLength,
           selectedStyle,
+          selectedUrlWasSameAsEnteredSearchString,
+          selectedUsingEnterKey,
         );
       } else {
         // Find awesomeBarState at latest search result update if any
@@ -180,6 +185,8 @@ class AwesomeBarObserver {
           const bookmarkAndHistoryRankSelected = -1;
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
+          const selectedUrlWasSameAsEnteredSearchString = -1;
+          const selectedUsingEnterKey = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -193,6 +200,8 @@ class AwesomeBarObserver {
             timeAtSelectedsFirstEntry,
             searchStringLength,
             selectedStyle,
+            selectedUrlWasSameAsEnteredSearchString,
+            selectedUsingEnterKey,
           );
         } else {
           // 3. The autocomplete popup did not get some suggestions displayed and none was selected
@@ -211,6 +220,8 @@ class AwesomeBarObserver {
           const bookmarkAndHistoryRankSelected = -1;
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
+          const selectedUrlWasSameAsEnteredSearchString = -1;
+          const selectedUsingEnterKey = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -224,6 +235,8 @@ class AwesomeBarObserver {
             timeAtSelectedsFirstEntry,
             searchStringLength,
             selectedStyle,
+            selectedUrlWasSameAsEnteredSearchString,
+            selectedUsingEnterKey,
           );
         }
       }
