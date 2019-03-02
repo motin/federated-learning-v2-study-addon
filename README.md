@@ -1,7 +1,7 @@
 # Federated Learning v2 - Study Add-On
 
-[![CircleCI badge](https://img.shields.io/circleci/project/github/motin/federated-learning-v2-study-addon/master.svg?label=CircleCI)](https://circleci.com/gh/motin/federated-learning-v2-study-addon/)
-[![Coverage Status](https://coveralls.io/repos/github/motin/federated-learning-v2-study-addon/badge.svg)](https://coveralls.io/github/motin/federated-learning-v2-study-addon)
+[![CircleCI badge](https://img.shields.io/circleci/project/github/mozilla/federated-learning-v2-study-addon/master.svg?label=CircleCI)](https://circleci.com/gh/mozilla/federated-learning-v2-study-addon/)
+[![Coverage Status](https://coveralls.io/repos/github/mozilla/federated-learning-v2-study-addon/badge.svg)](https://coveralls.io/github/mozilla/federated-learning-v2-study-addon)
 
 Federated Learning is a subarea of machine learning where the training process is distributed among many users.
 Instead of sharing their data, users only have to provide weight updates to the server.
