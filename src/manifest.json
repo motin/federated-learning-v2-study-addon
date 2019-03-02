@@ -62,12 +62,7 @@
       }
     }
   },
-  "permissions": [
-    "telemetry",
-    "management",
-    "storage",
-    "alarms"
-  ],
+  "permissions": ["telemetry", "management", "storage", "alarms"],
   "background": {
     "scripts": [
       "lib/prefs.js",
