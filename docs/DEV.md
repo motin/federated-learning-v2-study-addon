@@ -6,6 +6,10 @@
 
 **Contents**
 
+* [Engineering notes specific to this study](#engineering-notes-specific-to-this-study)
+  * [Experiment APIs](#experiment-apis)
+  * [Core components](#core-components)
+  * [Note to engineers for a potential v3 of this add-on:](#note-to-engineers-for-a-potential-v3-of-this-add-on)
 * [Preparations](#preparations)
 * [Getting started](#getting-started)
 * [Details](#details)
@@ -17,15 +21,28 @@
 * [Automated testing](#automated-testing)
   * [Unit tests](#unit-tests)
   * [Functional tests](#functional-tests)
-* [Components](#components)
-  * [Experiment APIs](#experiment-apis)
-  * [Core components](#core-components)
 * [Directory Structure and Files](#directory-structure-and-files)
 * [General Shield Study Engineering](#general-shield-study-engineering)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Engineering notes specific to this study
+
+### Experiment APIs
+
+* `frecency`: For interacting with the `moz_places` table and recalculating / changing frecency scores
+* `awesomeBar`: For observing interactions with the awesome bar. The required information for history / bookmark searches is retrieved (number of typed characters, selected suggestion, features of other suggestions)
+* `prefs`: For reading and writing preferences. This is just used to update the weights
+* `privacyContext`: For determining if a private session is active
+* `study` from [`shield-studies-addon-utils`](https://github.com/mozilla/shield-studies-addon-utils) for study related helpers
+
+### Core components
+
+* `lib/awesomeBarObserver.js`: Everything related to observing awesome bar interactions, using the events emitted by the `awesomeBar` Experiment API.
+* `lib/synchronization.js`: Everything related to the federated learning protocol. Currently that means sending weight updates back using Telemetry and reading the current model from S3
+* `lib/optimization.js`: For computing model updates
+* `studySetup.js` is adapted from [`shield-studies-addon-utils`](https://github.com/mozilla/shield-studies-addon-utils) and configures the study
+* `feature.js` connects everything.
 
 ### Note to engineers for a potential v3 of this add-on:
 
@@ -53,6 +70,8 @@ npm run lint
 ## build
 npm run build
 ```
+
+Use [../web-ext-config.js](../web-ext-config.js) to configure testing preferences and which Firefox flavor the above commands should use. (Pioneer studies note: web-ext can not be used to launch Pioneer studies - refer to the Manual testing section below for Pioneer studies).
 
 ## Details
 
@@ -179,31 +198,85 @@ ln -s Firefox\ Nightly.app FirefoxNightly.app
 npm run test:func
 ```
 
-Runs functional tests using the Selenium driver, verifying the telemetry payload at Firefox startup and add-on installation in a clean profile.
+Runs functional tests using the Selenium driver in a clean profile:
+
+* `0-study_utils_integration.js` - Verifies the telemetry payload throughout the study life cycle.
 
 Code at [/test/functional/](/test/functional/).
 
 Note: The study variation/branch during tests is overridden by a preference in the FIREFOX_PREFERENCES section of `test/utils.js`.
 
-## Components
-
-### Experiment APIs
-
-* `frecency`: For interacting with the `moz_places` table and recalculating / changing frecency scores
-* `awesomeBar`: For observing interactions with the awesome bar. The required information for history / bookmark searches is retrieved (number of typed characters, selected suggestion, features of other suggestions)
-* `prefs`: For reading and writing preferences. This is just used to update the weights
-* `privacyContext`: For determining if a private session is active
-* `study` from [`shield-studies-addon-utils`](https://github.com/mozilla/shield-studies-addon-utils) for study related helpers
-
-### Core components
-
-* `lib/awesomeBarObserver.js`: Everything related to observing awesome bar interactions, using the events emitted by the `awesomeBar` Experiment API.
-* `lib/synchronization.js`: Everything related to the federated learning protocol. Currently that means sending weight updates back using Telemetry and reading the current model from S3
-* `lib/optimization.js`: For computing model updates
-* `studySetup.js` is adapted from [`shield-studies-addon-utils`](https://github.com/mozilla/shield-studies-addon-utils) and configures the study
-* `feature.js` connects everything.
-
 ## Directory Structure and Files
+
+```
+├── .babelrc              # Used by karma to track code coverage in unit tests
+├── .circleci             # Setup for .circle ci integration
+│   ├── config.yml
+│   └── reports
+│       └── .gitignore
+├── .eslintignore
+├── .eslintrc.js          # Linting configuration for mozilla, json etc
+├── .gitignore
+├── LICENSE
+├── README.md
+├── dist                  # Built zips (add-ons)
+│   ├── .gitignore
+│   └── button_icon_preference_-_shield_study_example-2.0.0.zip
+├── docs
+│   ├── DEV.md
+│   ├── TELEMETRY.md      # Telemetry examples for this add-on
+│   ├── TESTPLAN.md       # Manual QA test plan
+│   └── WINDOWS_SETUP.md
+├── karma.conf.js
+├── package-lock.json
+├── package.json
+├── run-firefox.js
+├── src                   # Files that will go into the add-on
+│   ├── _locales
+│   │   ├── en-US
+│   │   │   └── messages.json
+│   │   └── fr
+│   │       └── messages.json
+│   ├── background.js     # Background script that contains a study life-cycle handler class and such boilerplate
+│   ├── feature.js        # Initiate your study logic using the Feature class in this file
+│   ├── icons
+│   │   ├── LICENSE
+│   │   ├── shield-icon.256.png
+│   │   ├── shield-icon.48.png
+│   │   ├── shield-icon.98.png
+│   │   └── shield-icon.svg
+│   ├── manifest.json     # The WebExtension manifest. Use this to declare permissions and web extension experiments etc
+│   ├── privileged
+│   │   ├── .gitignore
+│   │   ├── introductionNotificationBar
+│   │   │   ├── api.js
+│   │   │   └── schema.json
+│   │   ├── panel
+│   │   │   ├── blurts.EveryWindow.jsm
+│   │   │   └── cookiesrest.EveryWindow.js
+│   │   ├── privacyContext
+│   │   │   ├── api.js
+│   │   │   ├── api.md
+│   │   │   ├── schema.json
+│   │   │   ├── schema.yaml
+│   │   │   └── stubApi.js
+│   │   └── study
+│   │       ├── api.js
+│   │       └── schema.json
+│   └── studySetup.js
+└── test                  # Automated tests `npm test` and circle
+│   ├── .eslintrc.js
+│   ├── ensure_minimum_node_version.js
+│   ├── functional
+│   │   ├── 0-study_utils_integration.js
+│   │   ├── 1-button_test.js
+│   │   ├── 2-notification_bar.js
+│   │   └── utils.js
+│   ├── results           # Code coverage and log artifacts from test runs
+└── web-ext-config.js     # Configuration options used by the `web-ext` command
+
+>> tree -a -I 'node_modules|.git|.DS_Store'
+```
 
 This add-on uses the structure is set forth in [shield-studies-addon-template](https://github.com/mozilla/shield-studies-addon-template), with study-specific changes found mostly in `src/lib/`, `src/background.js`, `src/privileged/` and `src/studySetup.js`.
 

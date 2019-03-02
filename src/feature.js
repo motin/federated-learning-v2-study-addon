@@ -43,17 +43,13 @@ class Feature {
   }
 
   /**
-   *
-   *  - variation: study info about particular client study variation
-   *  - reason: string of background.js install/startup/shutdown reason
-   *
    * @param {Object} studyInfo Study info
    * @returns {Promise<*>} Promise that resolves after configure
    */
   async configure(studyInfo) {
     const synchronizer = new ModelSynchronization(studyInfo);
     this.awesomeBarObserver = new AwesomeBarObserver(synchronizer);
-    this.awesomeBarObserver.start();
+    return this.awesomeBarObserver.start();
   }
 
   /* good practice to have the literal 'sending' be wrapped up */

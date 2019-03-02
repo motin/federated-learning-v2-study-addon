@@ -10,8 +10,9 @@
   * [Preparations](#preparations)
   * [Install the add-on and enroll in the study](#install-the-add-on-and-enroll-in-the-study)
 * [Expected User Experience / Functionality](#expected-user-experience--functionality)
+  * [Surveys](#surveys)
   * [Do these tests (in addition to ordinary regression tests)](#do-these-tests-in-addition-to-ordinary-regression-tests)
-  * [Note: checking "sent telemetry is correct"](#note-checking-sent-telemetry-is-correct)
+  * [Note: checking "sent Telemetry is correct"](#note-checking-sent-telemetry-is-correct)
 * [Debug](#debug)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -108,7 +109,7 @@ This study fires a survey at the following endings:
 
 * Make sure that the branches and weights in the add-on configuration ([../src/studySetup.js](../src/studySetup.js)) corresponds to the branch weights of the Experimenter entry. (Note that for practical reasons, the implementation uses 7 branches instead of the 5 defined study branches. The study branches that separate use different populations for training and validation corresponding to separate branches in the implementation)
 
-### Note: checking "sent telemetry is correct"
+### Note: checking "sent Telemetry is correct"
 
 * Open the Browser Console using Firefox's top menu at `Tools > Web Developer > Browser Console`. This will display Shield (loading/telemetry) log output from the add-on.
 * To inspect the (unencrypted) contents individual telemetry packets, set `shieldStudy.logLevel` to `all`. This permits debug-level shield-add-on log output in the browser console. Note that this may negatively affect the performance of Firefox.
