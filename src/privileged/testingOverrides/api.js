@@ -27,6 +27,12 @@ this.testingOverrides = class extends ExtensionAPI {
             "",
           );
         },
+        getSurveyDaysFromExpirationOverride: async function getVariationNameOverride() {
+          return Preferences.get(
+            `extensions.${widgetId}.test.surveyDaysFromExpiration`,
+            false,
+          );
+        },
       },
     };
   }

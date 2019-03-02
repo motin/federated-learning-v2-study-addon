@@ -16,6 +16,8 @@ const MODEL_URL_ENDPOINT =
   process.env.MODEL_URL_ENDPOINT !== undefined
     ? process.env.MODEL_URL_ENDPOINT
     : false;
+const SURVEY_DAYS_FROM_EXPIRATION =
+  process.env.SURVEY_DAYS_FROM_EXPIRATION || false;
 
 const run = async studyType => {
   const driver = await utils.setupWebdriver.promiseSetupDriver(
@@ -66,6 +68,14 @@ const run = async studyType => {
       driver,
       `extensions.${widgetId}.test.modelUrlEndpoint`,
       MODEL_URL_ENDPOINT,
+    );
+  }
+  if (SURVEY_DAYS_FROM_EXPIRATION !== false) {
+    // Useful for local testing until production endpoints for v2 are up properly
+    await utils.preferences.set(
+      driver,
+      `extensions.${widgetId}.test.surveyDaysFromExpiration`,
+      SURVEY_DAYS_FROM_EXPIRATION,
     );
   }
   await utils.preferences.set(driver, `shieldStudy.logLevel`, LOG_LEVEL);

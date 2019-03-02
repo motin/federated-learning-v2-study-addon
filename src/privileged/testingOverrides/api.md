@@ -8,6 +8,10 @@ Accesses additional preferences used for study testing
 
 **Parameters**
 
+### `browser.testingOverrides.getSurveyDaysFromExpirationOverride( )`
+
+**Parameters**
+
 ## Events
 
 (None)

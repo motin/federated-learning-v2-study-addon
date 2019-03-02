@@ -7,3 +7,8 @@
     async: true
     description: ''
     parameters: []
+  - name: getSurveyDaysFromExpirationOverride
+    type: 'function'
+    async: true
+    description: ''
+    parameters: []

@@ -49,6 +49,7 @@ class StudyLifeCycleHandler {
     browser.study.onEndStudy.addListener(this.handleStudyEnding.bind(this));
     browser.study.onReady.addListener(this.enableFeature.bind(this));
     this.expirationAlarmName = `${browser.runtime.id}:studyExpiration`;
+    this.midStudySurveyAlarmName = `${browser.runtime.id}:midStudySurvey`;
   }
 
   /**
@@ -64,6 +65,7 @@ class StudyLifeCycleHandler {
     await browser.study.logger.log("Cleaning up study artifacts");
     await browser.storage.local.clear();
     await browser.alarms.clear(this.expirationAlarmName);
+    await browser.alarms.clear(this.midStudySurveyAlarmName);
     await feature.cleanup();
   }
 
@@ -81,6 +83,7 @@ class StudyLifeCycleHandler {
     await browser.study.logger.log(["Enabling experiment", studyInfo]);
     const { delayInMinutes } = studyInfo;
     if (delayInMinutes !== undefined) {
+      await browser.study.logger.log("Scheduling study expiration");
       const alarmName = this.expirationAlarmName;
       const alarmListener = async alarm => {
         if (alarm.name === alarmName) {
@@ -92,8 +95,73 @@ class StudyLifeCycleHandler {
       browser.alarms.create(alarmName, {
         delayInMinutes,
       });
+      const { midStudySurveyFired } = await browser.storage.local.get(
+        "midStudySurveyFired",
+      );
+      if (!midStudySurveyFired) {
+        await this.enableMidStudySurvey(delayInMinutes);
+      }
     }
     return feature.configure(studyInfo);
+  }
+
+  /**
+   * Set up mid-study survey period
+   *
+   * @param {number} delayInMinutes The study expires in this amount of minutes
+   *
+   * @returns {undefined}
+   */
+  async enableMidStudySurvey(delayInMinutes) {
+    const surveyDaysFromExpiration = await this.surveyDaysFromExpiration();
+    await browser.study.logger.log(
+      `The mid-study survey period is set to start ${surveyDaysFromExpiration} days before expiration`,
+    );
+    const midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration =
+      surveyDaysFromExpiration * 24 * 60;
+    if (
+      // Check if we are already in the mid-study survey period
+      delayInMinutes < midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration
+    ) {
+      await browser.study.logger.log("The mid-study survey period has begun");
+      await browser.storage.local.set({ midStudySurveyPeriodStarted: true });
+    } else {
+      await browser.study.logger.log(
+        "Scheduling mid-study survey period start",
+      );
+      const alarmName = this.midStudySurveyAlarmName;
+      const alarmListener = async alarm => {
+        if (alarm.name === alarmName) {
+          browser.alarms.onAlarm.removeListener(alarmListener);
+          await browser.storage.local.set({
+            midStudySurveyPeriodStarted: true,
+          });
+        }
+      };
+      browser.alarms.onAlarm.addListener(alarmListener);
+      browser.alarms.create(alarmName, {
+        delayInMinutes,
+      });
+    }
+  }
+
+  async surveyDaysFromExpiration() {
+    const override = await browser.testingOverrides.getSurveyDaysFromExpirationOverride();
+    if (override) {
+      return override;
+    }
+    const { surveyDaysFromExpiration } = await browser.storage.local.get(
+      "surveyDaysFromExpiration",
+    );
+    if (surveyDaysFromExpiration) {
+      return surveyDaysFromExpiration;
+    }
+    // Set it to 7-14 days before expiration (corresponds to day 14-21 with a 4 week expiration)
+    const days = 7 + Math.floor(7 * Math.random());
+    await browser.storage.local.set({
+      surveyDaysFromExpiration: days,
+    });
+    return days;
   }
 
   /** handles `study:end` signals
@@ -107,8 +175,16 @@ class StudyLifeCycleHandler {
    */
   async handleStudyEnding(ending) {
     await browser.study.logger.log([`Study wants to end:`, ending]);
-    for (const url of ending.urls) {
-      await browser.tabs.create({ url });
+    const { midStudySurveyFired } = await browser.storage.local.get(
+      "midStudySurveyFired",
+    );
+    if (midStudySurveyFired !== true) {
+      for (const url of ending.urls) {
+        await browser.study.logger.log(
+          "Firing end survey since mid-study survey was not fired",
+        );
+        await browser.tabs.create({ url });
+      }
     }
     switch (ending.endingName) {
       // could have different actions depending on positive / ending names

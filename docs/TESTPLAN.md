@@ -42,7 +42,9 @@ Depending on the study branch (see configuration in [../src/feature.js]()), a re
 
 ### Surveys
 
-This study fires a survey at the following endings:
+The main survey fires mid study 5 seconds after the second awesome bar interaction that occurs after 14-21 days (chosen on first run).
+
+In case no such survey has been fired, the survey fires at the following endings:
 
 * `individual-opt-out`
 * `expired`

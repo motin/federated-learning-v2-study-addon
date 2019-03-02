@@ -43,8 +43,34 @@ class AwesomeBarObserver {
    * @returns {Promise<boolean>} Promise that resolves when the method has completed
    */
   async afterInteraction() {
+    await browser.study.logger.debug([
+      "awesomeBarObserver.afterInteraction entered",
+      {
+        observedEventsSinceLastFocus: this.observedEventsSinceLastFocus,
+      },
+    ]);
+
     try {
-      await this.updateModel();
+      const focusEvent = this.observedEventsSinceLastFocus
+        .slice()
+        .reverse()
+        .find(observedEvent => {
+          return (
+            observedEvent.awesomeBarState && observedEvent.type === "onFocus"
+          );
+        });
+
+      // Drop interactions where we did not catch the focus event (happens at browser startup
+      // and if the study is enabled while an interaction is ongoing)
+      if (!focusEvent) {
+        await browser.study.logger.debug(
+          "Dropping awesome bar interaction metadata since no onFocus event was captured",
+        );
+        return false;
+      }
+
+      await this.updateModel(focusEvent);
+      await this.fireMidStudySurveyIfRelevant();
     } catch (error) {
       // Surfacing otherwise silent errors
       // eslint-disable-next-line no-console
@@ -57,31 +83,58 @@ class AwesomeBarObserver {
   /**
    * @returns {Promise<boolean>} Promise that resolves when the method has completed
    */
-  async updateModel() {
-    await browser.study.logger.debug([
-      "awesomeBarObserver.updateModel entered",
-      {
-        observedEventsSinceLastFocus: this.observedEventsSinceLastFocus,
-      },
-    ]);
-    const focusEvent = this.observedEventsSinceLastFocus
-      .slice()
-      .reverse()
-      .find(observedEvent => {
-        return (
-          observedEvent.awesomeBarState && observedEvent.type === "onFocus"
-        );
-      });
-
-    // Drop interactions where we did not catch the focus event (happens at browser startup
-    // and if the study is enabled while an interaction is ongoing)
-    if (!focusEvent) {
-      await browser.study.logger.debug(
-        "Dropping awesome bar interaction metadata since no onFocus event was captured",
-      );
+  async fireMidStudySurveyIfRelevant() {
+    const { midStudySurveyPeriodStarted } = await browser.storage.local.get(
+      "midStudySurveyPeriodStarted",
+    );
+    if (!midStudySurveyPeriodStarted) {
       return false;
     }
 
+    const { midStudySurveyFired } = await browser.storage.local.get(
+      "midStudySurveyFired",
+    );
+    if (midStudySurveyFired) {
+      return false;
+    }
+
+    const {
+      previousInteractionsWithinMidStudySurveyPeriod,
+    } = await browser.storage.local.get(
+      "previousInteractionsWithinMidStudySurveyPeriod",
+    );
+    const interactionsWithinMidStudySurveyPeriod =
+      (previousInteractionsWithinMidStudySurveyPeriod
+        ? previousInteractionsWithinMidStudySurveyPeriod
+        : 0) + 1;
+    await browser.study.logger.log(
+      `Awesome bar interactions within the mid-study survey period: ${interactionsWithinMidStudySurveyPeriod}`,
+    );
+    if (interactionsWithinMidStudySurveyPeriod === 2) {
+      await browser.study.logger.log("Firing mid-study survey in 5 seconds");
+      setTimeout(async() => {
+        await browser.study.logger.log("Firing mid-study survey");
+        // Fire mid-study survey after 5 seconds
+        const url = await browser.study.fullSurveyUrl(
+          "https://qsurvey.mozilla.com/s3/URL-bar-satisfaction-survey/",
+          "mid-study-survey",
+        );
+        await browser.tabs.create({ url });
+        await browser.storage.local.set({ midStudySurveyFired: true });
+      }, 5000);
+    } else {
+      await browser.storage.local.set({
+        previousInteractionsWithinMidStudySurveyPeriod: interactionsWithinMidStudySurveyPeriod,
+      });
+    }
+    return true;
+  }
+
+  /**
+   * @param {object} focusEvent Already extracted to check for interaction validity, thus forwarded here as an argument
+   * @returns {Promise<boolean>} Promise that resolves when the method has completed
+   */
+  async updateModel(focusEvent) {
     const blurEvent = this.observedEventsSinceLastFocus
       .slice()
       .reverse()
