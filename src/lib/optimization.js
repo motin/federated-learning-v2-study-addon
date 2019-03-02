@@ -42,7 +42,7 @@ class FrecencyOptimizer {
     searchStringLength,
     selectedStyle,
     selectedUrlWasSameAsEnteredSearchString,
-    selectedUsingEnterKey,
+    enterWasPressed,
   ) {
     await browser.study.logger.debug([
       "frecencyOptimizer.step entered",
@@ -85,7 +85,7 @@ class FrecencyOptimizer {
         searchStringLength,
         selectedStyle,
         selectedUrlWasSameAsEnteredSearchString,
-        selectedUsingEnterKey,
+        enterWasPressed,
       });
     } catch (error) {
       // Surfacing otherwise silent errors

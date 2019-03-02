@@ -88,7 +88,7 @@ class ModelSynchronization {
     searchStringLength,
     selectedStyle,
     selectedUrlWasSameAsEnteredSearchString,
-    selectedUsingEnterKey,
+    enterWasPressed,
   }) {
     await browser.study.logger.log("Pushing model update via telemetry");
     const payload = {
@@ -108,7 +108,7 @@ class ModelSynchronization {
       search_string_length: searchStringLength,
       selected_style: selectedStyle,
       selected_url_was_same_as_entered_search_string: selectedUrlWasSameAsEnteredSearchString,
-      selected_using_enter_key: selectedUsingEnterKey,
+      enter_was_pressed: enterWasPressed,
       study_variation: this.studyInfo.variation.name,
       study_addon_version: browser.runtime.getManifest().version,
     };

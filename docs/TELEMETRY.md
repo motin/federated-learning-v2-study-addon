@@ -73,7 +73,7 @@ The following data is sent with this ping:
 | `search_string_length`                           | integer           | the length of the awesome bar search string at the end of the interaction                                                                  |
 | `selected_style`                                 | string            | the style attribute of the chosen suggestion (indicates the source of the suggestion)                                                      |
 | `selected_url_was_same_as_entered_search_string` | integer           | was the whole suggested URL entered into the awesome bar before the selection? (1 = yes, 0 = no, -1 if none selected)                      |
-| `selected_using_enter_key`                       | integer           | was enter pressed to select? (1 = yes, 0 = no, -1 if none selected)                                                                        |
+| `enter_was_pressed`                              | integer           | was enter pressed during interaction? (1 = yes, 0 = no)                                                                                    |
 | `study_variation`                                | string            | in what variation is the user enrolled in (e.g. control)                                                                                   |
 | `study_addon_version`                            | string            | the version of the study add-on                                                                                                            |
 

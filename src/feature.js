@@ -134,7 +134,7 @@ class Feature {
           type: "number",
           minimum: -1,
         },
-        selected_using_enter_key: {
+        enter_was_pressed: {
           type: "number",
           minimum: -1,
         },
@@ -162,7 +162,7 @@ class Feature {
         "search_string_length",
         "selected_style",
         "selected_url_was_same_as_entered_search_string",
-        "selected_using_enter_key",
+        "enter_was_pressed",
         "study_variation",
         "study_addon_version",
       ],
@@ -216,7 +216,7 @@ class Feature {
       selected_url_was_same_as_entered_search_string: String(
         payload.selected_url_was_same_as_entered_search_string,
       ),
-      selected_using_enter_key: String(payload.selected_using_enter_key),
+      enter_was_pressed: String(payload.enter_was_pressed),
       study_variation: String(payload.study_variation),
       study_addon_version: String(payload.study_addon_version),
     };

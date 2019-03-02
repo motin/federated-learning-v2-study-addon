@@ -92,6 +92,17 @@ class AwesomeBarObserver {
           );
         });
 
+      const enterKeyPressEvents = this.observedEventsSinceLastFocus.filter(
+        observedEvent => {
+          return (
+            observedEvent.type === "onKeyPress" &&
+            observedEvent.keyEvent &&
+            observedEvent.keyEvent.key === "Enter"
+          );
+        },
+      );
+      const enterWasPressed = enterKeyPressEvents.length > 0 ? 1 : 0;
+
       // 1. A suggestion was selected from the autocomplete popup
       if (selectionEvent) {
         const {
@@ -132,7 +143,6 @@ class AwesomeBarObserver {
           focusEvent.timestamp.getTime();
 
         const selectedUrlWasSameAsEnteredSearchString = -1;
-        const selectedUsingEnterKey = -1;
 
         await this.frecencyOptimizer.step(
           numSuggestionsDisplayed,
@@ -147,7 +157,7 @@ class AwesomeBarObserver {
           searchStringLength,
           selectedStyle,
           selectedUrlWasSameAsEnteredSearchString,
-          selectedUsingEnterKey,
+          enterWasPressed,
         );
       } else {
         // Find awesomeBarState at latest search result update if any
@@ -186,7 +196,6 @@ class AwesomeBarObserver {
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
           const selectedUrlWasSameAsEnteredSearchString = -1;
-          const selectedUsingEnterKey = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -201,7 +210,7 @@ class AwesomeBarObserver {
             searchStringLength,
             selectedStyle,
             selectedUrlWasSameAsEnteredSearchString,
-            selectedUsingEnterKey,
+            enterWasPressed,
           );
         } else {
           // 3. The autocomplete popup did not get some suggestions displayed and none was selected
@@ -221,7 +230,6 @@ class AwesomeBarObserver {
           const timeAtSelectedsFirstEntry = -1;
           const selectedStyle = "";
           const selectedUrlWasSameAsEnteredSearchString = -1;
-          const selectedUsingEnterKey = -1;
 
           await this.frecencyOptimizer.step(
             numSuggestionsDisplayed,
@@ -236,7 +244,7 @@ class AwesomeBarObserver {
             searchStringLength,
             selectedStyle,
             selectedUrlWasSameAsEnteredSearchString,
-            selectedUsingEnterKey,
+            enterWasPressed,
           );
         }
       }
