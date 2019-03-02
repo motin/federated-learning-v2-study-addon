@@ -32,6 +32,7 @@ See [DEV.md](./docs/DEV.md) for more details on how to work with this add-on as 
 
 ### Version 2
 
+* [Experimenter](https://experimenter.services.mozilla.com/experiments/federated-learning-v2/)
 * [Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=TODO)
 
 ### Version 1
