@@ -42,86 +42,164 @@ class AwesomeBarObserver {
    * 3. The autocomplete popup did not get some suggestions displayed and none was selected
    * @returns {Promise<boolean>} Promise that resolves when the method has completed
    */
-  async updateModel() {
+  async afterInteraction() {
     try {
-      await browser.study.logger.debug([
-        "awesomeBarObserver.updateModel entered",
-        {
-          observedEventsSinceLastFocus: this.observedEventsSinceLastFocus,
-        },
-      ]);
-      const focusEvent = this.observedEventsSinceLastFocus
-        .slice()
-        .reverse()
-        .find(observedEvent => {
-          return (
-            observedEvent.awesomeBarState && observedEvent.type === "onFocus"
-          );
-        });
+      await this.updateModel();
+    } catch (error) {
+      // Surfacing otherwise silent errors
+      // eslint-disable-next-line no-console
+      console.error(error.toString(), error.stack);
+      throw new Error(error.toString());
+    }
+    return true;
+  }
 
-      // Drop interactions where we did not catch the focus event (happens at browser startup
-      // and if the study is enabled while an interaction is ongoing)
-      if (!focusEvent) {
-        await browser.study.logger.debug(
-          "Dropping awesome bar interaction metadata since no onFocus event was captured",
+  /**
+   * @returns {Promise<boolean>} Promise that resolves when the method has completed
+   */
+  async updateModel() {
+    await browser.study.logger.debug([
+      "awesomeBarObserver.updateModel entered",
+      {
+        observedEventsSinceLastFocus: this.observedEventsSinceLastFocus,
+      },
+    ]);
+    const focusEvent = this.observedEventsSinceLastFocus
+      .slice()
+      .reverse()
+      .find(observedEvent => {
+        return (
+          observedEvent.awesomeBarState && observedEvent.type === "onFocus"
         );
-        return false;
-      }
+      });
 
-      const blurEvent = this.observedEventsSinceLastFocus
+    // Drop interactions where we did not catch the focus event (happens at browser startup
+    // and if the study is enabled while an interaction is ongoing)
+    if (!focusEvent) {
+      await browser.study.logger.debug(
+        "Dropping awesome bar interaction metadata since no onFocus event was captured",
+      );
+      return false;
+    }
+
+    const blurEvent = this.observedEventsSinceLastFocus
+      .slice()
+      .reverse()
+      .find(observedEvent => {
+        return observedEvent.awesomeBarState && observedEvent.type === "onBlur";
+      });
+
+    // Timings are normalized relative to the start of the interaction
+    const timeStartInteraction = 0;
+    const timeEndInteraction =
+      blurEvent.timestamp.getTime() - focusEvent.timestamp.getTime();
+
+    const selectionEvent = this.observedEventsSinceLastFocus
+      .slice()
+      .reverse()
+      .find(observedEvent => {
+        return (
+          observedEvent.awesomeBarState &&
+          observedEvent.type === "onAutocompleteSuggestionSelected"
+        );
+      });
+
+    const enterKeyPressEvents = this.observedEventsSinceLastFocus.filter(
+      observedEvent => {
+        return (
+          observedEvent.type === "onKeyPress" &&
+          observedEvent.keyEvent &&
+          observedEvent.keyEvent.key === "Enter"
+        );
+      },
+    );
+    const enterWasPressed = enterKeyPressEvents.length > 0 ? 1 : 0;
+
+    // 1. A suggestion was selected from the autocomplete popup
+    if (selectionEvent) {
+      const {
+        rankSelected,
+        searchString,
+        searchStringLength,
+        numSuggestionsDisplayed,
+        suggestions,
+      } = selectionEvent.awesomeBarState;
+
+      const numKeyDownEvents = AwesomeBarObserver.numKeyDownEvents(
+        this.observedEventsSinceLastFocus,
+      );
+
+      const selectedSuggestion = suggestions[rankSelected];
+
+      const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
+        searchString,
+        selectedSuggestion.url,
+      );
+
+      const bookmarkAndHistorySuggestions = suggestions.filter(suggestion =>
+        AwesomeBarObserver.isBookmarkOrHistoryStyle(suggestion.style),
+      );
+      const bookmarkAndHistoryUrlSuggestions = bookmarkAndHistorySuggestions.map(
+        suggestion => suggestion.url,
+      );
+      const bookmarkAndHistoryRankSelected = bookmarkAndHistoryUrlSuggestions.indexOf(
+        selectedSuggestion.url,
+      );
+      const selectedStyle = selectedSuggestion.style;
+
+      const eventsAtSelectedsFirstEntry = AwesomeBarObserver.eventsAtSelectedsFirstEntry(
+        this.observedEventsSinceLastFocus,
+      );
+      const numKeyDownEventsAtSelectedsFirstEntry = AwesomeBarObserver.numKeyDownEvents(
+        eventsAtSelectedsFirstEntry,
+      );
+      const eventAtSelectedsFirstEntry = eventsAtSelectedsFirstEntry
         .slice()
-        .reverse()
-        .find(observedEvent => {
-          return (
-            observedEvent.awesomeBarState && observedEvent.type === "onBlur"
-          );
-        });
+        .pop();
+      const timeAtSelectedsFirstEntry =
+        eventAtSelectedsFirstEntry.timestamp.getTime() -
+        focusEvent.timestamp.getTime();
 
-      // Timings are normalized relative to the start of the interaction
-      const timeStartInteraction = 0;
-      const timeEndInteraction =
-        blurEvent.timestamp.getTime() - focusEvent.timestamp.getTime();
-
-      const selectionEvent = this.observedEventsSinceLastFocus
+      await this.frecencyOptimizer.step(
+        numSuggestionsDisplayed,
+        rankSelected,
+        bookmarkAndHistoryUrlSuggestions,
+        bookmarkAndHistoryRankSelected,
+        numKeyDownEventsAtSelectedsFirstEntry,
+        numKeyDownEvents,
+        timeStartInteraction,
+        timeEndInteraction,
+        timeAtSelectedsFirstEntry,
+        searchStringLength,
+        selectedStyle,
+        selectedUrlWasSameAsSearchString,
+        enterWasPressed,
+      );
+    } else {
+      // Find awesomeBarState at latest search result update if any
+      const latestUpdateEvent = this.observedEventsSinceLastFocus
         .slice()
         .reverse()
         .find(observedEvent => {
           return (
             observedEvent.awesomeBarState &&
-            observedEvent.type === "onAutocompleteSuggestionSelected"
+            observedEvent.type === "onAutocompleteSuggestionsUpdated"
           );
         });
 
-      const enterKeyPressEvents = this.observedEventsSinceLastFocus.filter(
-        observedEvent => {
-          return (
-            observedEvent.type === "onKeyPress" &&
-            observedEvent.keyEvent &&
-            observedEvent.keyEvent.key === "Enter"
-          );
-        },
-      );
-      const enterWasPressed = enterKeyPressEvents.length > 0 ? 1 : 0;
+      // 2. The autocomplete popup got some suggestions displayed but none were selected
+      if (latestUpdateEvent) {
+        const rankSelected = -1;
 
-      // 1. A suggestion was selected from the autocomplete popup
-      if (selectionEvent) {
         const {
-          rankSelected,
-          searchString,
           searchStringLength,
           numSuggestionsDisplayed,
           suggestions,
-        } = selectionEvent.awesomeBarState;
+        } = latestUpdateEvent.awesomeBarState;
 
+        const numKeyDownEventsAtSelectedsFirstEntry = -1;
         const numKeyDownEvents = AwesomeBarObserver.numKeyDownEvents(
           this.observedEventsSinceLastFocus,
-        );
-
-        const selectedSuggestion = suggestions[rankSelected];
-
-        const selectedUrlWasSameAsSearchString = AwesomeBarObserver.selectedUrlWasSameAsSearchString(
-          searchString,
-          selectedSuggestion.url,
         );
 
         const bookmarkAndHistorySuggestions = suggestions.filter(suggestion =>
@@ -130,23 +208,10 @@ class AwesomeBarObserver {
         const bookmarkAndHistoryUrlSuggestions = bookmarkAndHistorySuggestions.map(
           suggestion => suggestion.url,
         );
-        const bookmarkAndHistoryRankSelected = bookmarkAndHistoryUrlSuggestions.indexOf(
-          selectedSuggestion.url,
-        );
-        const selectedStyle = selectedSuggestion.style;
-
-        const eventsAtSelectedsFirstEntry = AwesomeBarObserver.eventsAtSelectedsFirstEntry(
-          this.observedEventsSinceLastFocus,
-        );
-        const numKeyDownEventsAtSelectedsFirstEntry = AwesomeBarObserver.numKeyDownEvents(
-          eventsAtSelectedsFirstEntry,
-        );
-        const eventAtSelectedsFirstEntry = eventsAtSelectedsFirstEntry
-          .slice()
-          .pop();
-        const timeAtSelectedsFirstEntry =
-          eventAtSelectedsFirstEntry.timestamp.getTime() -
-          focusEvent.timestamp.getTime();
+        const bookmarkAndHistoryRankSelected = -1;
+        const timeAtSelectedsFirstEntry = -1;
+        const selectedStyle = "";
+        const selectedUrlWasSameAsSearchString = -1;
 
         await this.frecencyOptimizer.step(
           numSuggestionsDisplayed,
@@ -164,99 +229,40 @@ class AwesomeBarObserver {
           enterWasPressed,
         );
       } else {
-        // Find awesomeBarState at latest search result update if any
-        const latestUpdateEvent = this.observedEventsSinceLastFocus
-          .slice()
-          .reverse()
-          .find(observedEvent => {
-            return (
-              observedEvent.awesomeBarState &&
-              observedEvent.type === "onAutocompleteSuggestionsUpdated"
-            );
-          });
+        // 3. The autocomplete popup did not get some suggestions displayed and none was selected
 
-        // 2. The autocomplete popup got some suggestions displayed but none were selected
-        if (latestUpdateEvent) {
-          const rankSelected = -1;
+        const rankSelected = -1;
 
-          const {
-            searchStringLength,
-            numSuggestionsDisplayed,
-            suggestions,
-          } = latestUpdateEvent.awesomeBarState;
+        const { searchStringLength } = focusEvent.awesomeBarState;
 
-          const numKeyDownEventsAtSelectedsFirstEntry = -1;
-          const numKeyDownEvents = AwesomeBarObserver.numKeyDownEvents(
-            this.observedEventsSinceLastFocus,
-          );
+        const numKeyDownEventsAtSelectedsFirstEntry = -1;
+        const numKeyDownEvents = AwesomeBarObserver.numKeyDownEvents(
+          this.observedEventsSinceLastFocus,
+        );
 
-          const bookmarkAndHistorySuggestions = suggestions.filter(suggestion =>
-            AwesomeBarObserver.isBookmarkOrHistoryStyle(suggestion.style),
-          );
-          const bookmarkAndHistoryUrlSuggestions = bookmarkAndHistorySuggestions.map(
-            suggestion => suggestion.url,
-          );
-          const bookmarkAndHistoryRankSelected = -1;
-          const timeAtSelectedsFirstEntry = -1;
-          const selectedStyle = "";
-          const selectedUrlWasSameAsSearchString = -1;
+        const numSuggestionsDisplayed = 0;
+        const bookmarkAndHistoryUrlSuggestions = [];
+        const bookmarkAndHistoryRankSelected = -1;
+        const timeAtSelectedsFirstEntry = -1;
+        const selectedStyle = "";
+        const selectedUrlWasSameAsSearchString = -1;
 
-          await this.frecencyOptimizer.step(
-            numSuggestionsDisplayed,
-            rankSelected,
-            bookmarkAndHistoryUrlSuggestions,
-            bookmarkAndHistoryRankSelected,
-            numKeyDownEventsAtSelectedsFirstEntry,
-            numKeyDownEvents,
-            timeStartInteraction,
-            timeEndInteraction,
-            timeAtSelectedsFirstEntry,
-            searchStringLength,
-            selectedStyle,
-            selectedUrlWasSameAsSearchString,
-            enterWasPressed,
-          );
-        } else {
-          // 3. The autocomplete popup did not get some suggestions displayed and none was selected
-
-          const rankSelected = -1;
-
-          const { searchStringLength } = focusEvent.awesomeBarState;
-
-          const numKeyDownEventsAtSelectedsFirstEntry = -1;
-          const numKeyDownEvents = AwesomeBarObserver.numKeyDownEvents(
-            this.observedEventsSinceLastFocus,
-          );
-
-          const numSuggestionsDisplayed = 0;
-          const bookmarkAndHistoryUrlSuggestions = [];
-          const bookmarkAndHistoryRankSelected = -1;
-          const timeAtSelectedsFirstEntry = -1;
-          const selectedStyle = "";
-          const selectedUrlWasSameAsSearchString = -1;
-
-          await this.frecencyOptimizer.step(
-            numSuggestionsDisplayed,
-            rankSelected,
-            bookmarkAndHistoryUrlSuggestions,
-            bookmarkAndHistoryRankSelected,
-            numKeyDownEventsAtSelectedsFirstEntry,
-            numKeyDownEvents,
-            timeStartInteraction,
-            timeEndInteraction,
-            timeAtSelectedsFirstEntry,
-            searchStringLength,
-            selectedStyle,
-            selectedUrlWasSameAsSearchString,
-            enterWasPressed,
-          );
-        }
+        await this.frecencyOptimizer.step(
+          numSuggestionsDisplayed,
+          rankSelected,
+          bookmarkAndHistoryUrlSuggestions,
+          bookmarkAndHistoryRankSelected,
+          numKeyDownEventsAtSelectedsFirstEntry,
+          numKeyDownEvents,
+          timeStartInteraction,
+          timeEndInteraction,
+          timeAtSelectedsFirstEntry,
+          searchStringLength,
+          selectedStyle,
+          selectedUrlWasSameAsSearchString,
+          enterWasPressed,
+        );
       }
-    } catch (error) {
-      // Surfacing otherwise silent errors
-      // eslint-disable-next-line no-console
-      console.error(error.toString(), error.stack);
-      throw new Error(error.toString());
     }
     return true;
   }
@@ -286,7 +292,7 @@ class AwesomeBarObserver {
       timestamp: new Date(),
       type: "onBlur",
     });
-    await this.updateModel(awesomeBarState);
+    await this.afterInteraction();
     return true;
   }
 
