@@ -114,11 +114,13 @@ The following data is sent with this ping:
   "bookmark_and_history_rank_selected": 0,
   "num_key_down_events_at_selecteds_first_entry": 8,
   "num_key_down_events": 14,
-  "search_string_length": 13,
-  "selected_style": "autofill heuristic",
   "time_start_interaction": 0,
   "time_end_interaction": 2275,
   "time_at_selecteds_first_entry": 1458,
+  "search_string_length": 13,
+  "selected_style": "autofill heuristic",
+  "selected_url_was_same_as_search_string": 0,
+  "enter_was_pressed": 1,
   "study_variation": "dogfooding",
   "study_addon_version": "2.1.1"
 }
@@ -133,81 +135,118 @@ These are the `payload` fields from all pings in the `shield-study` and `shield-
 
 branch        dogfooding
 study_name    federated-learning-v2@shield.mozilla.org
-addon_version 2.1.0
+addon_version 2.1.1
 version       3
 
-2019-02-27T13:45:30.229Z shield-study
-{
-  "study_state": "installed"
-}
-
-2019-02-27T13:45:39.703Z shield-study-addon
+2019-03-04T09:24:46.760Z shield-study-addon
 {
   "attributes": {
     "bookmark_and_history_num_suggestions_displayed": "0",
     "bookmark_and_history_rank_selected": "-1",
+    "enter_was_pressed": "1",
     "frecency_scores": "[]",
     "loss": "0",
-    "model_version": "140",
-    "num_key_down_events": "11",
-    "num_key_down_events_at_selecteds_first_entry": "11",
+    "model_version": "126",
+    "num_key_down_events": "13",
+    "num_key_down_events_at_selecteds_first_entry": "13",
     "num_suggestions_displayed": "2",
     "rank_selected": "0",
     "search_string_length": "11",
     "selected_style": "action visiturl heuristic",
-    "study_addon_version": "2.1.0",
+    "selected_url_was_same_as_search_string": "1",
+    "study_addon_version": "2.1.1",
     "study_variation": "dogfooding",
-    "time_at_selecteds_first_entry": "3082",
-    "time_end_interaction": "3184",
+    "time_at_selecteds_first_entry": "2753",
+    "time_end_interaction": "2967",
     "time_start_interaction": "0",
     "update": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
   }
 }
 
-2019-02-27T13:45:47.264Z shield-study-addon
+2019-03-04T09:24:54.885Z shield-study-addon
 {
   "attributes": {
-    "bookmark_and_history_num_suggestions_displayed": "1",
+    "bookmark_and_history_num_suggestions_displayed": "4",
     "bookmark_and_history_rank_selected": "0",
-    "frecency_scores": "[41]",
+    "enter_was_pressed": "1",
+    "frecency_scores": "[5,5,5,5]",
     "loss": "0",
-    "model_version": "140",
-    "num_key_down_events": "4",
+    "model_version": "126",
+    "num_key_down_events": "17",
     "num_key_down_events_at_selecteds_first_entry": "1",
-    "num_suggestions_displayed": "2",
+    "num_suggestions_displayed": "5",
     "rank_selected": "1",
-    "search_string_length": "4",
-    "selected_style": "favicon",
-    "study_addon_version": "2.1.0",
+    "search_string_length": "1",
+    "selected_style": "bookmark",
+    "selected_url_was_same_as_search_string": "0",
+    "study_addon_version": "2.1.1",
     "study_variation": "dogfooding",
-    "time_at_selecteds_first_entry": "4079",
-    "time_end_interaction": "5993",
+    "time_at_selecteds_first_entry": "793",
+    "time_end_interaction": "6708",
     "time_start_interaction": "0",
     "update": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
   }
 }
 
-2019-02-27T13:45:49.495Z shield-study-addon
+2019-03-04T09:24:59.495Z shield-study-addon
 {
   "attributes": {
     "bookmark_and_history_num_suggestions_displayed": "0",
     "bookmark_and_history_rank_selected": "-1",
+    "enter_was_pressed": "1",
     "frecency_scores": "[]",
     "loss": "0",
-    "model_version": "140",
-    "num_key_down_events": "6",
-    "num_key_down_events_at_selecteds_first_entry": "6",
-    "num_suggestions_displayed": "1",
-    "rank_selected": "0",
-    "search_string_length": "6",
-    "selected_style": "action searchengine heuristic",
-    "study_addon_version": "2.1.0",
+    "model_version": "126",
+    "num_key_down_events": "4",
+    "num_key_down_events_at_selecteds_first_entry": "1",
+    "num_suggestions_displayed": "2",
+    "rank_selected": "1",
+    "search_string_length": "3",
+    "selected_style": "action switchtab",
+    "selected_url_was_same_as_search_string": "0",
+    "study_addon_version": "2.1.1",
     "study_variation": "dogfooding",
-    "time_at_selecteds_first_entry": "755",
-    "time_end_interaction": "1515",
+    "time_at_selecteds_first_entry": "266",
+    "time_end_interaction": "1613",
     "time_start_interaction": "0",
     "update": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
   }
+}
+
+2019-03-04T09:25:00.717Z shield-study-addon
+{
+  "attributes": {
+    "bookmark_and_history_num_suggestions_displayed": "0",
+    "bookmark_and_history_rank_selected": "-1",
+    "enter_was_pressed": "0",
+    "frecency_scores": "[]",
+    "loss": "0",
+    "model_version": "126",
+    "num_key_down_events": "0",
+    "num_key_down_events_at_selecteds_first_entry": "-1",
+    "num_suggestions_displayed": "0",
+    "rank_selected": "-1",
+    "search_string_length": "289",
+    "selected_style": "",
+    "selected_url_was_same_as_search_string": "-1",
+    "study_addon_version": "2.1.1",
+    "study_variation": "dogfooding",
+    "time_at_selecteds_first_entry": "-1",
+    "time_end_interaction": "493",
+    "time_start_interaction": "0",
+    "update": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
+  }
+}
+
+2019-03-04T09:25:09.579Z shield-study
+{
+  "study_state": "expired",
+  "study_state_fullname": "expired"
+}
+
+2019-03-04T09:25:09.584Z shield-study
+{
+  "study_state": "exit"
 }
 ```
 

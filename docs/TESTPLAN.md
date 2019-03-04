@@ -40,7 +40,7 @@ The awesome bar is observed and an updated model is calculated and submitted via
 
 Depending on the study branch (see `branchConfigurations` in [../src/feature.js](../src/feature.js)), a remote model may be fetched and applied locally (`validation: true`).
 
-When a model has been applied locally, the ranking of the autocomplete suggestions related to bookmarks and browser history is expected to differ from the ordinary behavior. 
+When a model has been applied locally, the ranking of the autocomplete suggestions related to bookmarks and browser history is expected to differ from the ordinary behavior.
 
 ### Surveys
 
@@ -149,4 +149,4 @@ See [TELEMETRY.md](./TELEMETRY.md) for more details on what pings are sent by th
 To debug installation and loading of the add-on:
 
 * Open the Browser Console using Firefox's top menu at `Tools > Web Developer > Browser Console`. This will display Shield (loading/telemetry) and log output from the add-on.
-* Set `shieldStudy.logLevel` to `all`. This permits debug-level shield-add-on log output in the browser console. 
+* Set `shieldStudy.logLevel` to `all`. This permits debug-level shield-add-on log output in the browser console.
