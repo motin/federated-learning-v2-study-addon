@@ -112,6 +112,7 @@ class AwesomeBarObserver {
     );
     if (interactionsWithinMidStudySurveyPeriod === 2) {
       await browser.study.logger.log("Firing mid-study survey in 5 seconds");
+      await browser.storage.local.set({ midStudySurveyFired: true });
       setTimeout(async() => {
         await browser.study.logger.log("Firing mid-study survey");
         // Fire mid-study survey after 5 seconds
@@ -120,7 +121,6 @@ class AwesomeBarObserver {
           "mid-study-survey",
         );
         await browser.tabs.create({ url });
-        await browser.storage.local.set({ midStudySurveyFired: true });
       }, 5000);
     } else {
       await browser.storage.local.set({
