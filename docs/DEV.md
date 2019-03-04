@@ -221,7 +221,7 @@ Note: The study variation/branch during tests is overridden by a preference in t
 ├── README.md
 ├── dist                  # Built zips (add-ons)
 │   ├── .gitignore
-│   └── button_icon_preference_-_shield_study_example-2.0.0.zip
+│   └── federated_learning_awesome_bar-2.1.1.zip
 ├── docs
 │   ├── DEV.md
 │   ├── TELEMETRY.md      # Telemetry examples for this add-on
@@ -231,6 +231,8 @@ Note: The study variation/branch during tests is overridden by a preference in t
 ├── package-lock.json
 ├── package.json
 ├── run-firefox.js
+├── schemas
+│   └── frecency-update.payload.schema.json
 ├── src                   # Files that will go into the add-on
 │   ├── _locales
 │   │   ├── en-US
@@ -245,34 +247,53 @@ Note: The study variation/branch during tests is overridden by a preference in t
 │   │   ├── shield-icon.48.png
 │   │   ├── shield-icon.98.png
 │   │   └── shield-icon.svg
+│   ├── lib
+│   │   ├── awesomeBarObserver.js
+│   │   ├── optimization.js
+│   │   ├── prefs.js
+│   │   └── synchronization.js
 │   ├── manifest.json     # The WebExtension manifest. Use this to declare permissions and web extension experiments etc
 │   ├── privileged
 │   │   ├── .gitignore
-│   │   ├── introductionNotificationBar
+│   │   ├── awesomeBar
+│   │   │   ├── EveryWindow.js
+│   │   │   ├── api.js
+│   │   │   ├── api.md
+│   │   │   ├── schema.json
+│   │   │   └── schema.yaml
+│   │   ├── frecency
 │   │   │   ├── api.js
 │   │   │   └── schema.json
-│   │   ├── panel
-│   │   │   ├── blurts.EveryWindow.jsm
-│   │   │   └── cookiesrest.EveryWindow.js
+│   │   ├── frecencyPrefs
+│   │   │   ├── api.js
+│   │   │   ├── api.md
+│   │   │   ├── schema.json
+│   │   │   └── schema.yaml
 │   │   ├── privacyContext
 │   │   │   ├── api.js
 │   │   │   ├── api.md
 │   │   │   ├── schema.json
 │   │   │   ├── schema.yaml
 │   │   │   └── stubApi.js
-│   │   └── study
+│   │   ├── study
+│   │   │   ├── api.js
+│   │   │   └── schema.json
+│   │   └── testingOverrides
 │   │       ├── api.js
-│   │       └── schema.json
+│   │       ├── api.md
+│   │       ├── schema.json
+│   │       └── schema.yaml
 │   └── studySetup.js
 └── test                  # Automated tests `npm test` and circle
 │   ├── .eslintrc.js
 │   ├── ensure_minimum_node_version.js
 │   ├── functional
 │   │   ├── 0-study_utils_integration.js
-│   │   ├── 1-button_test.js
-│   │   ├── 2-notification_bar.js
 │   │   └── utils.js
 │   ├── results           # Code coverage and log artifacts from test runs
+│   └── unit
+│       ├── awesomeBarObserver.spec.js
+│       └── feature.spec.js
 └── web-ext-config.js     # Configuration options used by the `web-ext` command
 
 >> tree -a -I 'node_modules|.git|.DS_Store'
