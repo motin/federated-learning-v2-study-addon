@@ -92,19 +92,19 @@ const baseStudySetup = {
     },
     {
       name: "non-dogfooding-training",
-      weight: 0.2 * 0.8,
+      weight: 0.2 * 0.5,
     },
     {
       name: "non-dogfooding-validation",
-      weight: 0.2 * 0.2,
+      weight: 0.2 * 0.5,
     },
     {
       name: "non-dogfooding-crazy-training",
-      weight: 0.2 * 0.8,
+      weight: 0.2 * 0.5,
     },
     {
       name: "non-dogfooding-crazy-validation",
-      weight: 0.2 * 0.2,
+      weight: 0.2 * 0.5,
     },
   ],
 
