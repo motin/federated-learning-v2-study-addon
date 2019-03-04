@@ -38,40 +38,66 @@ No user interface elements are modified directly in this study.
 
 The awesome bar is observed and an updated model is calculated and submitted via telemetry after every interaction.
 
-Depending on the study branch (see configuration in [../src/feature.js]()), a remote model may be fetched and applied locally (`validation: true`).
+Depending on the study branch (see `branchConfigurations` in [../src/feature.js](../src/feature.js)), a remote model may be fetched and applied locally (`validation: true`).
+
+When a model has been applied locally, the ranking of the autocomplete suggestions related to bookmarks and browser history is expected to differ from the ordinary behavior. 
 
 ### Surveys
 
-The main survey fires mid study 5 seconds after the second awesome bar interaction that occurs after 14-21 days (chosen on first run).
+The main survey fires mid study 5 seconds after the second awesome bar interaction that occurs sometime after 14-21 days (interval chosen randomly for each client).
 
 In case no such survey has been fired, the survey fires at the following endings:
 
-* `individual-opt-out`
-* `expired`
+* `individual-opt-out` (A user opts out of the study from `about:studies`)
+* `expired` (4 weeks has passed since the study started)
 
 ### Do these tests (in addition to ordinary regression tests)
 
 **Fetching of the latest upstream model at study start**
 
-* Install the add-on as per above
+* Install the add-on as per above, using a branch that includes validation
 * Verify that the study runs
 * Verify that the study add-on log out includes "Fetching model" and "Applying frecency weights"
 
 **Fetching of the latest upstream model periodically**
 
-* Install the add-on as per above
+* Install the add-on as per above, using a branch that includes validation
 * Verify that the study runs
 * Verify that the study add-on log out includes "Fetching model" and "Applying frecency weights" every 5 minutes, starting from a full hour (eg 12:00, 12:05, 12:10 etc)
 
-**Sending of the updated model**
+**Sending of the updated model and interaction metadata**
 
-* Install the add-on as per above
+* Install the add-on as per above, not using the control branch
+* Verify that the study runs
+* Interact with the awesome bar (start: focus the element. stop: select suggestion / unfocus / press escape / press enter etc)
+* Verify that sent telemetry is correct
+
+**Sending of the updated model and interaction metadata on history/bookmark related search suggestion selected**
+
+* Install the add-on as per above, not using the control branch
 * Verify that the study runs
 * Open up a new tab and write "example.com" + ENTER
 * Close the tab
 * Open up a new tab and start writing "example.com"
 * Instead of pressing ENTER, choose the "example.com" history entry in the suggestions that are shown (history entries have a wireframe globe as an icon)
 * Verify that sent telemetry is correct
+
+**Mid-study survey fires properly test 1**
+
+* Install the add-on as per above
+* Verify that the study runs
+* Verify that the study add-on log out includes "The mid-study survey period is set to start # days before expiration", where # is a number between 7 and 14.
+* Interact two times with the awesome bar
+* Verify that no mid-study survey is fired after 5 seconds
+
+**Mid-study survey fires properly test 2**
+
+* Set `extensions.federated-learning-v2_shield_mozilla_org.test.surveyDaysFromExpiration` to `1000`
+* Install the add-on as per above
+* Verify that the study runs
+* Verify that the study add-on log out includes "The mid-study survey period is set to start 1000 days before expiration", where # is a number between 7 and 14.
+* Interact two times with the awesome bar
+* Verify that no mid-study survey is fired after 5 seconds
 
 **Enabling of permanent private browsing before study has begun**
 
@@ -109,12 +135,11 @@ In case no such survey has been fired, the survey fires at the following endings
 
 **Correct branches and weights**
 
-* Make sure that the branches and weights in the add-on configuration ([../src/studySetup.js](../src/studySetup.js)) corresponds to the branch weights of the Experimenter entry. (Note that for practical reasons, the implementation uses 7 branches instead of the 5 defined study branches. The study branches that separate use different populations for training and validation corresponding to separate branches in the implementation)
+* Make sure that the branches and weights in the add-on configuration ([../src/studySetup.js](../src/studySetup.js)) corresponds to the branch weights of the Experimenter entry. (They don't need to be verbatim identically named, but at least correspond to the same weights. Note that for practical reasons, the implementation uses 7 branches instead of the 5 defined study branches. The study branches that separate use different populations for training and validation corresponding to separate branches in the implementation)
 
 ### Note: checking "sent Telemetry is correct"
 
 * Open the Browser Console using Firefox's top menu at `Tools > Web Developer > Browser Console`. This will display Shield (loading/telemetry) log output from the add-on.
-* To inspect the (unencrypted) contents individual telemetry packets, set `shieldStudy.logLevel` to `all`. This permits debug-level shield-add-on log output in the browser console. Note that this may negatively affect the performance of Firefox.
 * To see the actual payloads, go to `about:telemetry` -> Click `current ping` -> Select `Archived ping data` -> Ping Type `pioneer-study` -> Choose a payload -> Raw Payload
 
 See [TELEMETRY.md](./TELEMETRY.md) for more details on what pings are sent by this add-on.
@@ -124,3 +149,4 @@ See [TELEMETRY.md](./TELEMETRY.md) for more details on what pings are sent by th
 To debug installation and loading of the add-on:
 
 * Open the Browser Console using Firefox's top menu at `Tools > Web Developer > Browser Console`. This will display Shield (loading/telemetry) and log output from the add-on.
+* Set `shieldStudy.logLevel` to `all`. This permits debug-level shield-add-on log output in the browser console. 
