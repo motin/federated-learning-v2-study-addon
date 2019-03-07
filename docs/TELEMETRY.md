@@ -58,7 +58,7 @@ The following data is sent with this ping:
 | name                                             | type              | description                                                                                                                                |
 | ------------------------------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `model_version`                                  | integer           | the version of the model that all the other data is based on                                                                               |
-| `frecency_scores`                                | array of integers | what scores did the model assign to the suggestions?                                                                                       |
+| `frecency_scores`                                | array of floats   | what scores did the model assign to the suggestions?                                                                                       |
 | `loss`                                           | float             | a number quantifying how well the model worked                                                                                             |
 | `update`                                         | array of floats   | the model improvement that the user is proposing                                                                                           |
 | `num_suggestions_displayed`                      | integer           | how many suggestions were displayed?                                                                                                       |
