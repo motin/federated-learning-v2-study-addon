@@ -55,27 +55,27 @@ Three main interactions with the awesome bar trigger a model update via study te
 
 The following data is sent with this ping:
 
-| name                                             | type              | description                                                                                                                                |
-| ------------------------------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `model_version`                                  | integer           | the version of the model that all the other data is based on                                                                               |
-| `frecency_scores`                                | array of floats   | what scores did the model assign to the suggestions?                                                                                       |
-| `loss`                                           | float             | a number quantifying how well the model worked                                                                                             |
-| `update`                                         | array of floats   | the model improvement that the user is proposing                                                                                           |
-| `num_suggestions_displayed`                      | integer           | how many suggestions were displayed?                                                                                                       |
-| `rank_selected`                                  | integer           | what was the position of the selected suggestion? (-1 if none selected)                                                                    |
-| `bookmark_and_history_num_suggestions_displayed` | integer           | how many history / bookmark suggestions were displayed?                                                                                    |
-| `bookmark_and_history_rank_selected`             | integer           | what was the position of the selected history / bookmark suggestion? (-1 if none selected)                                                 |
-| `num_key_down_events_at_selecteds_first_entry`   | integer           | how many keys did the user press down before the ultimately selected suggestion entered the list?                                          |
-| `num_key_down_events`                            | integer           | how many keys did the user press down?                                                                                                     |
-| `time_start_interaction`                         | integer           | the time when the awesome bar interaction started (always 0 since the the other timestamps are reported relative to this one)              |
-| `time_end_interaction`                           | integer           | the time when the ultimately selected suggestion entered the list (relative to `time_start_interaction`, -1 if no suggestion was selected) |
-| `time_at_selecteds_first_entry`                  | integer           | the time when the awesome bar interaction ended (relative to `time_start_interaction`)                                                     |
-| `search_string_length`                           | integer           | the length of the awesome bar search string at the end of the interaction                                                                  |
-| `selected_style`                                 | string            | the style attribute of the chosen suggestion (indicates the source of the suggestion)                                                      |
-| `selected_url_was_same_as_search_string`         | integer           | was the whole suggested URL entered into the awesome bar before the selection? (1 = yes, 0 = no, -1 if none selected)                      |
-| `enter_was_pressed`                              | integer           | was enter pressed during interaction? (1 = yes, 0 = no)                                                                                    |
-| `study_variation`                                | string            | in what variation is the user enrolled in (e.g. control)                                                                                   |
-| `study_addon_version`                            | string            | the version of the study add-on                                                                                                            |
+| name                                             | type            | description                                                                                                                                |
+| ------------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `model_version`                                  | integer         | the version of the model that all the other data is based on                                                                               |
+| `frecency_scores`                                | array of floats | what scores did the model assign to the suggestions?                                                                                       |
+| `loss`                                           | float           | a number quantifying how well the model worked                                                                                             |
+| `update`                                         | array of floats | the model improvement that the user is proposing                                                                                           |
+| `num_suggestions_displayed`                      | integer         | how many suggestions were displayed?                                                                                                       |
+| `rank_selected`                                  | integer         | what was the position of the selected suggestion? (-1 if none selected)                                                                    |
+| `bookmark_and_history_num_suggestions_displayed` | integer         | how many history / bookmark suggestions were displayed?                                                                                    |
+| `bookmark_and_history_rank_selected`             | integer         | what was the position of the selected history / bookmark suggestion? (-1 if none selected)                                                 |
+| `num_key_down_events_at_selecteds_first_entry`   | integer         | how many keys did the user press down before the ultimately selected suggestion entered the list?                                          |
+| `num_key_down_events`                            | integer         | how many keys did the user press down?                                                                                                     |
+| `time_start_interaction`                         | integer         | the time when the awesome bar interaction started (always 0 since the the other timestamps are reported relative to this one)              |
+| `time_end_interaction`                           | integer         | the time when the ultimately selected suggestion entered the list (relative to `time_start_interaction`, -1 if no suggestion was selected) |
+| `time_at_selecteds_first_entry`                  | integer         | the time when the awesome bar interaction ended (relative to `time_start_interaction`)                                                     |
+| `search_string_length`                           | integer         | the length of the awesome bar search string at the end of the interaction                                                                  |
+| `selected_style`                                 | string          | the style attribute of the chosen suggestion (indicates the source of the suggestion)                                                      |
+| `selected_url_was_same_as_search_string`         | integer         | was the whole suggested URL entered into the awesome bar before the selection? (1 = yes, 0 = no, -1 if none selected)                      |
+| `enter_was_pressed`                              | integer         | was enter pressed during interaction? (1 = yes, 0 = no)                                                                                    |
+| `study_variation`                                | string          | in what variation is the user enrolled in (e.g. control)                                                                                   |
+| `study_addon_version`                            | string          | the version of the study add-on                                                                                                            |
 
 ### Example ping
 
