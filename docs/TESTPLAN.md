@@ -105,13 +105,6 @@ In case no such survey has been fired, the survey fires at the following endings
 * Install the add-on as per above
 * Verify that the study does not run
 
-**Enabling of permanent private browsing after study has begun**
-
-* Install the add-on as per above
-* Verify that the study runs
-* Enable permanent private browsing
-* Verify that the study ends upon the subsequent restart of the browser
-
 **Private browsing mode test 1**
 
 * Install the add-on as per above
