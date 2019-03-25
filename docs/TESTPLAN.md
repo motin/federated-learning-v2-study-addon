@@ -55,13 +55,13 @@ In case no such survey has been fired, the survey fires at the following endings
 
 **Fetching of the latest upstream model at study start**
 
-* Install the add-on as per above, using a branch that includes validation
+* Install the add-on as per above, not using the control branch
 * Verify that the study runs
 * Verify that the study add-on log out includes "Fetching model" and "Applying frecency weights"
 
 **Fetching of the latest upstream model periodically**
 
-* Install the add-on as per above, using a branch that includes validation
+* Install the add-on as per above, not using the control branch
 * Verify that the study runs
 * Verify that the study add-on log out includes "Fetching model" and "Applying frecency weights" every 5 minutes, starting from a full hour (eg 12:00, 12:05, 12:10 etc)
 
@@ -70,7 +70,8 @@ In case no such survey has been fired, the survey fires at the following endings
 * Install the add-on as per above, not using the control branch
 * Verify that the study runs
 * Interact with the awesome bar (start: focus the element. stop: select suggestion / unfocus / press escape / press enter etc)
-* Verify that sent telemetry is correct
+* Verify that sent shield telemetry is correct
+* Verify that `frecency-update` telemetry is sent in all branches except `control` and those ending with `-not-submitting`
 
 **Sending of the updated model and interaction metadata on history/bookmark related search suggestion selected**
 
@@ -80,7 +81,8 @@ In case no such survey has been fired, the survey fires at the following endings
 * Close the tab
 * Open up a new tab and start writing "example.com"
 * Instead of pressing ENTER, choose the "example.com" history entry in the suggestions that are shown (history entries have a wireframe globe as an icon)
-* Verify that sent telemetry is correct
+* Verify that sent shield telemetry is correct
+* Verify that `frecency-update` telemetry is sent in all branches except `control` and those ending with `-not-submitting`
 
 **Mid-study survey fires properly test 1**
 

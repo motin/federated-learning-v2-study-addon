@@ -43,11 +43,7 @@ This study has no study-specific endings.
 
 ## `shield-study-addon` pings, specific to THIS study.
 
-Every time a `frecency-update` ping is submitted (see below), a corresponding `shield-study-addon` ping is submitted, allowing for automatic querying of study data in re:dash. Note that `shield-study-addon` pings only accepts string attributes, why a stringification of all ping attributes is performed before submitting the `shield-study-addon` ping. This does not affect the `frecency-update` ping.
-
-## `frecency-update` ping ([schema](https://github.com/mozilla-services/mozilla-pipeline-schemas/tree/dev/templates/telemetry/frecency-update))
-
-Three main interactions with the awesome bar trigger a model update via study telemetry:
+All interactions with the awesome bar (defined as starting with a focus event and ending with a blur event) trigger study telemetry, for instance:
 
 1. A suggestion was selected from the autocomplete popup
 2. The autocomplete popup got some suggestions displayed but none were selected
@@ -76,6 +72,12 @@ The following data is sent with this ping:
 | `enter_was_pressed`                              | integer         | was enter pressed during interaction? (1 = yes, 0 = no)                                                                                    |
 | `study_variation`                                | string          | in what variation is the user enrolled in (e.g. control)                                                                                   |
 | `study_addon_version`                            | string          | the version of the study add-on                                                                                                            |
+
+## `frecency-update` ping ([schema](https://github.com/mozilla-services/mozilla-pipeline-schemas/tree/dev/templates/telemetry/frecency-update))
+
+In all branches except `control` and those ending with `-not-submitting`, a `frecency-update` ping is submitted, providing weight updates to the streaming ETL job that updates the remote models. 
+
+Note: The corresponding `shield-study-addon` ping is always submitted, allowing for automatic querying of study data in re:dash. Note that `shield-study-addon` pings only accepts string attributes, why a stringification of all ping attributes is performed before submitting the `shield-study-addon` ping. This does not affect the `frecency-update` ping.
 
 ### Example ping
 
