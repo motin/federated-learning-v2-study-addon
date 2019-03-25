@@ -1,20 +1,18 @@
 /* global feature, FRECENCY_PREFS */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "(ModelSynchronization)" }]*/
 
-const URL_ENDPOINT_HUMAN_SEED =
-  "https://public-data.telemetry.mozilla.org/awesomebar_study_feb19/human_seed/latest.json";
-const URL_ENDPOINT_CRAZY_SEED =
-  "https://public-data.telemetry.mozilla.org/awesomebar_study_feb19/crazy_seed/latest.json";
+const URL_ENDPOINT_TEMPLATE =
+  "https://public-data.telemetry.mozilla.org/federated-learning-v2/{modelNumber}/latest.json";
 const MINUTES_PER_ITERATION = 5; // Should be a dividor of 60
 
 class ModelSynchronization {
   constructor(studyInfo) {
     this.iteration = -1;
     this.studyInfo = studyInfo;
-    const branchConfiguration =
+    this.branchConfiguration =
       feature.branchConfigurations[studyInfo.variation.name];
-    if (branchConfiguration.validation) {
-      this.fetchModel();
+    if (studyInfo.variation.name !== "control") {
+      this.fetchRemoteModel();
     }
   }
 
@@ -38,11 +36,12 @@ class ModelSynchronization {
     return msUntilNextMinute + minutesMissing * 60 * 1000;
   }
 
-  async fetchModel() {
-    const { crazySeed } = this.studyInfo.variation;
-    let modelUrlEndpoint = crazySeed
-      ? URL_ENDPOINT_CRAZY_SEED
-      : URL_ENDPOINT_HUMAN_SEED;
+  async fetchRemoteModel() {
+    const { modelNumber } = this.branchConfiguration;
+    let modelUrlEndpoint = URL_ENDPOINT_TEMPLATE.replace(
+      "{modelNumber}",
+      modelNumber,
+    );
     const modelUrlEndPointOverride = await browser.testingOverrides.getModelUrlEndpointOverride();
     if (modelUrlEndPointOverride !== "") {
       modelUrlEndpoint = modelUrlEndPointOverride;
@@ -50,16 +49,16 @@ class ModelSynchronization {
     await browser.study.logger.log("Fetching model from " + modelUrlEndpoint);
     fetch(modelUrlEndpoint)
       .then(response => response.json())
-      .then(this.applyModelUpdate.bind(this));
+      .then(this.applyRemoteModel.bind(this));
 
     this.setTimer();
   }
 
   setTimer() {
-    setTimeout(this.fetchModel.bind(this), this.msUntilNextIteration());
+    setTimeout(this.fetchRemoteModel.bind(this), this.msUntilNextIteration());
   }
 
-  async applyModelUpdate({ iteration, model }) {
+  async applyRemoteModel({ iteration, model }) {
     await browser.study.logger.debug({ iteration, model });
     this.iteration = iteration;
 
@@ -72,7 +71,7 @@ class ModelSynchronization {
     browser.experiments.frecency.updateAllFrecencies();
   }
 
-  async pushModelUpdate({
+  async onLocalModelUpdate({
     frecencyScores,
     loss,
     weights,
@@ -90,7 +89,7 @@ class ModelSynchronization {
     selectedUrlWasSameAsSearchString,
     enterWasPressed,
   }) {
-    await browser.study.logger.log("Pushing model update via telemetry");
+    await browser.study.logger.log("Local model was updated");
     const payload = {
       model_version: this.iteration,
       frecency_scores: frecencyScores,
@@ -112,6 +111,9 @@ class ModelSynchronization {
       study_variation: this.studyInfo.variation.name,
       study_addon_version: browser.runtime.getManifest().version,
     };
-    await feature.sendTelemetry(payload);
+    await feature.sendTelemetry(
+      payload,
+      this.branchConfiguration.submitFrecencyUpdate,
+    );
   }
 }

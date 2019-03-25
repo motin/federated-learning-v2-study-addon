@@ -68,7 +68,7 @@ class FrecencyOptimizer {
         bookmarkAndHistoryUrlSuggestions,
         bookmarkAndHistoryRankSelected,
       );
-      return this.synchronizer.pushModelUpdate({
+      return this.synchronizer.onLocalModelUpdate({
         frecencyScores,
         loss,
         weights,

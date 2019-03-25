@@ -5,39 +5,32 @@ class Feature {
   constructor() {
     this.branchConfigurations = {
       control: {
-        training: false,
-        validation: false,
-        crazySeed: false,
+        modelNumber: null,
+        submitFrecencyUpdate: false,
       },
-      dogfooding: {
-        training: true,
-        validation: true,
-        crazySeed: false,
+      model1: {
+        modelNumber: 1,
+        submitFrecencyUpdate: true,
       },
-      "dogfooding-crazy": {
-        training: true,
-        validation: true,
-        crazySeed: true,
+      model2: {
+        modelNumber: 2,
+        submitFrecencyUpdate: true,
       },
-      "non-dogfooding-training": {
-        training: true,
-        validation: false,
-        crazySeed: false,
+      "model3-submitting": {
+        modelNumber: 3,
+        submitFrecencyUpdate: true,
       },
-      "non-dogfooding-validation": {
-        training: false,
-        validation: true,
-        crazySeed: false,
+      "model3-not-submitting": {
+        modelNumber: 3,
+        submitFrecencyUpdate: false,
       },
-      "non-dogfooding-crazy-training": {
-        training: true,
-        validation: false,
-        crazySeed: true,
+      "model4-submitting": {
+        modelNumber: 4,
+        submitFrecencyUpdate: true,
       },
-      "non-dogfooding-crazy-validation": {
-        training: false,
-        validation: true,
-        crazySeed: true,
+      "model4-not-submitting": {
+        modelNumber: 4,
+        submitFrecencyUpdate: false,
       },
     };
   }
@@ -53,7 +46,7 @@ class Feature {
   }
 
   /* good practice to have the literal 'sending' be wrapped up */
-  async sendTelemetry(payload) {
+  async sendTelemetry(payload, submitFrecencyUpdate) {
     if (await browser.privacyContext.aPrivateBrowserWindowIsOpen()) {
       // drop the ping - do not send any telemetry
       return false;
@@ -184,9 +177,13 @@ class Feature {
     }
 
     // Submit ping using the frecency-update schema/topic - will be picked up by the streaming ETL job
-    await browser.telemetry.submitPing("frecency-update", payload, {
-      addClientId: true,
-    });
+    if (submitFrecencyUpdate) {
+      await browser.telemetry.submitPing("frecency-update", payload, {
+        addClientId: true,
+      });
+      await browser.study.logger.log("Submitted `frecency-update` ping:");
+      await browser.study.logger.log({ payload });
+    }
 
     // Also submit ping using study utils - allows for automatic querying of study data in re:dash
     const shieldStudyAddonPayload = {
@@ -221,8 +218,8 @@ class Feature {
       study_addon_version: String(payload.study_addon_version),
     };
     await browser.study.sendTelemetry(shieldStudyAddonPayload);
-    await browser.study.logger.log("Telemetry submitted:");
-    await browser.study.logger.log({ payload, shieldStudyAddonPayload });
+    await browser.study.logger.log("Shield telemetry submitted:");
+    await browser.study.logger.log({ shieldStudyAddonPayload });
     return true;
   }
 

@@ -21,7 +21,7 @@ const FIREFOX_PREFERENCES = {
 
   // Force variation for testing
   "extensions.federated-learning-v2_shield_mozilla_org.test.variationName":
-    "dogfooding",
+    "model1",
 
   // Enable verbose shield study utils logging
   "shieldStudy.logLevel": "All",

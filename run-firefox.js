@@ -11,7 +11,7 @@ const STUDY_TYPE = process.env.STUDY_TYPE || "shield";
 const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 const EXPIRE_IN_SECONDS = process.env.EXPIRE_IN_SECONDS || false;
 const EXPIRED = process.env.EXPIRED || false;
-const BRANCH = process.env.BRANCH || "dogfooding";
+const BRANCH = process.env.BRANCH || "model1";
 const MODEL_URL_ENDPOINT =
   process.env.MODEL_URL_ENDPOINT !== undefined
     ? process.env.MODEL_URL_ENDPOINT

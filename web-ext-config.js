@@ -16,7 +16,7 @@ const defaultConfig = {
     pref: [
       "shieldStudy.logLevel=info",
       "browser.ctrlTab.recentlyUsedOrder=false",
-      "extensions.federated-learning-v2_shield_mozilla_org.test.variationName=dogfooding",
+      "extensions.federated-learning-v2_shield_mozilla_org.test.variationName=model1",
     ],
   },
 };

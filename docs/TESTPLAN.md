@@ -28,7 +28,7 @@
 * (Create profile: <https://developer.mozilla.org/Firefox/Multiple_profiles>, or via some other method)
 * Navigate to _about:config_ and set the following preferences. (If a preference does not exist, create it be right-clicking in the white area and selecting New -> String)
 * Set `shieldStudy.logLevel` to `info`. This permits shield-add-on log output in browser console.
-* Set `extensions.federated-learning-v2_shield_mozilla_org.test.variationName` to `dogfooding` (or any other study variation/branch to test specifically)
+* Set `extensions.federated-learning-v2_shield_mozilla_org.test.variationName` to `model1` (or any other study variation/branch to test specifically)
 * Go to [this study's tracking bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1532217) and install the latest add-on zip file
 * (If you are installing an unsigned version of the add-on, you need to set `extensions.legacy.enabled` to `true` before installing the add-on)
 

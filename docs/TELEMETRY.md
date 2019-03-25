@@ -121,7 +121,7 @@ The following data is sent with this ping:
   "selected_style": "autofill heuristic",
   "selected_url_was_same_as_search_string": 0,
   "enter_was_pressed": 1,
-  "study_variation": "dogfooding",
+  "study_variation": "model1",
   "study_addon_version": "2.1.1"
 }
 ```
@@ -133,7 +133,7 @@ These are the `payload` fields from all pings in the `shield-study` and `shield-
 ```
 // common fields
 
-branch        dogfooding
+branch        model1
 study_name    federated-learning-v2@shield.mozilla.org
 addon_version 2.1.1
 version       3
@@ -155,7 +155,7 @@ version       3
     "selected_style": "action visiturl heuristic",
     "selected_url_was_same_as_search_string": "1",
     "study_addon_version": "2.1.1",
-    "study_variation": "dogfooding",
+    "study_variation": "model1",
     "time_at_selecteds_first_entry": "2753",
     "time_end_interaction": "2967",
     "time_start_interaction": "0",
@@ -180,7 +180,7 @@ version       3
     "selected_style": "bookmark",
     "selected_url_was_same_as_search_string": "0",
     "study_addon_version": "2.1.1",
-    "study_variation": "dogfooding",
+    "study_variation": "model1",
     "time_at_selecteds_first_entry": "793",
     "time_end_interaction": "6708",
     "time_start_interaction": "0",
@@ -205,7 +205,7 @@ version       3
     "selected_style": "action switchtab",
     "selected_url_was_same_as_search_string": "0",
     "study_addon_version": "2.1.1",
-    "study_variation": "dogfooding",
+    "study_variation": "model1",
     "time_at_selecteds_first_entry": "266",
     "time_end_interaction": "1613",
     "time_start_interaction": "0",
@@ -230,7 +230,7 @@ version       3
     "selected_style": "",
     "selected_url_was_same_as_search_string": "-1",
     "study_addon_version": "2.1.1",
-    "study_variation": "dogfooding",
+    "study_variation": "model1",
     "time_at_selecteds_first_entry": "-1",
     "time_end_interaction": "493",
     "time_start_interaction": "0",
