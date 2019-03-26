@@ -6,7 +6,7 @@ class Feature {
     this.branchConfigurations = {
       control: {
         modelNumber: null,
-        submitFrecencyUpdate: false,
+        submitFrecencyUpdate: true,
       },
       model1: {
         modelNumber: 1,
@@ -22,7 +22,7 @@ class Feature {
       },
       "model3-not-submitting": {
         modelNumber: 3,
-        submitFrecencyUpdate: false,
+        submitFrecencyUpdate: true,
       },
       "model4-submitting": {
         modelNumber: 4,
@@ -30,7 +30,7 @@ class Feature {
       },
       "model4-not-submitting": {
         modelNumber: 4,
-        submitFrecencyUpdate: false,
+        submitFrecencyUpdate: true,
       },
     };
   }
