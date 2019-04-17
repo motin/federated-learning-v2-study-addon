@@ -97,9 +97,9 @@ In case no such survey has been fired, the survey fires at the following endings
 * Set `extensions.federated-learning-v2_shield_mozilla_org.test.surveyDaysFromExpiration` to `1000`
 * Install the add-on as per above
 * Verify that the study runs
-* Verify that the study add-on log out includes "The mid-study survey period is set to start 1000 days before expiration", where # is a number between 7 and 14.
+* Verify that the study add-on log out includes "The mid-study survey period is set to start 1000 days before expiration".
 * Interact two times with the awesome bar
-* Verify that no mid-study survey is fired after 5 seconds
+* Verify that the mid-study survey is fired after 5 seconds
 
 **Enabling of permanent private browsing before study has begun**
 
