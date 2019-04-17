@@ -82,7 +82,8 @@ class StudyLifeCycleHandler {
   async enableFeature(studyInfo) {
     await browser.study.logger.log(["Enabling experiment", studyInfo]);
     const { delayInMinutes } = studyInfo;
-    if (delayInMinutes !== undefined) {
+    const theStudyExpiresInThisManyMinutes = delayInMinutes;
+    if (theStudyExpiresInThisManyMinutes !== undefined) {
       await browser.study.logger.log("Scheduling study expiration");
       const alarmName = this.expirationAlarmName;
       const alarmListener = async alarm => {
@@ -93,13 +94,13 @@ class StudyLifeCycleHandler {
       };
       browser.alarms.onAlarm.addListener(alarmListener);
       browser.alarms.create(alarmName, {
-        delayInMinutes,
+        delayInMinutes: theStudyExpiresInThisManyMinutes,
       });
       const { midStudySurveyFired } = await browser.storage.local.get(
         "midStudySurveyFired",
       );
       if (!midStudySurveyFired) {
-        await this.enableMidStudySurvey(delayInMinutes);
+        await this.enableMidStudySurvey(theStudyExpiresInThisManyMinutes);
       }
     }
     return feature.configure(studyInfo);
@@ -108,11 +109,11 @@ class StudyLifeCycleHandler {
   /**
    * Set up mid-study survey period
    *
-   * @param {number} delayInMinutes The study expires in this amount of minutes
+   * @param {number} theStudyExpiresInThisManyMinutes The study expires in this amount of minutes
    *
    * @returns {undefined}
    */
-  async enableMidStudySurvey(delayInMinutes) {
+  async enableMidStudySurvey(theStudyExpiresInThisManyMinutes) {
     const surveyDaysFromExpiration = await this.surveyDaysFromExpiration();
     await browser.study.logger.log(
       `The mid-study survey period is set to start ${surveyDaysFromExpiration} days before expiration`,
@@ -121,7 +122,8 @@ class StudyLifeCycleHandler {
       surveyDaysFromExpiration * 24 * 60;
     if (
       // Check if we are already in the mid-study survey period
-      delayInMinutes < midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration
+      theStudyExpiresInThisManyMinutes <=
+      midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration
     ) {
       await browser.study.logger.log("The mid-study survey period has begun");
       await browser.storage.local.set({ midStudySurveyPeriodStarted: true });
@@ -130,6 +132,9 @@ class StudyLifeCycleHandler {
         "Scheduling mid-study survey period start",
       );
       const alarmName = this.midStudySurveyAlarmName;
+      const surveyStudyPeriodStartsInThisManyMinutes =
+        theStudyExpiresInThisManyMinutes -
+        midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration;
       const alarmListener = async alarm => {
         if (alarm.name === alarmName) {
           browser.alarms.onAlarm.removeListener(alarmListener);
@@ -140,7 +145,7 @@ class StudyLifeCycleHandler {
       };
       browser.alarms.onAlarm.addListener(alarmListener);
       browser.alarms.create(alarmName, {
-        delayInMinutes,
+        delayInMinutes: surveyStudyPeriodStartsInThisManyMinutes,
       });
     }
   }
