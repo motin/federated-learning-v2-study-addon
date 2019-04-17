@@ -75,7 +75,7 @@ The following data is sent with this ping:
 
 ## `frecency-update` ping ([schema](https://github.com/mozilla-services/mozilla-pipeline-schemas/tree/dev/templates/telemetry/frecency-update))
 
-In all branches except `control` and those ending with `-not-submitting`, a `frecency-update` ping is submitted, providing weight updates to the streaming ETL job that updates the remote models. 
+In all branches except `control` and those ending with `-not-submitting`, a `frecency-update` ping is submitted, providing weight updates to the streaming ETL job that updates the remote models.
 
 Note: The corresponding `shield-study-addon` ping is always submitted, allowing for automatic querying of study data in re:dash. Note that `shield-study-addon` pings only accepts string attributes, why a stringification of all ping attributes is performed before submitting the `shield-study-addon` ping. This does not affect the `frecency-update` ping.
 
