@@ -128,13 +128,13 @@ class StudyLifeCycleHandler {
       await browser.study.logger.log("The mid-study survey period has begun");
       await browser.storage.local.set({ midStudySurveyPeriodStarted: true });
     } else {
-      await browser.study.logger.log(
-        "Scheduling mid-study survey period start",
-      );
       const alarmName = this.midStudySurveyAlarmName;
       const surveyStudyPeriodStartsInThisManyMinutes =
         theStudyExpiresInThisManyMinutes -
         midStudySurveyPeriodStartsThisManyMinutesBeforeExpiration;
+      await browser.study.logger.log(
+        `Scheduling mid-study survey period to start in ${surveyStudyPeriodStartsInThisManyMinutes} minutes`,
+      );
       const alarmListener = async alarm => {
         if (alarm.name === alarmName) {
           browser.alarms.onAlarm.removeListener(alarmListener);
